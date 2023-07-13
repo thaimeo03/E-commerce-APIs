@@ -1,5 +1,5 @@
 import express from 'express'
-import testRouter from './routes/test.route'
+import usersRouter from './routes/users.route'
 import errorHandler from './middlewares/error.middleware'
 import databaseService from './services/database.service'
 
@@ -10,7 +10,7 @@ databaseService.connect()
 
 app.use(express.json())
 // routes here
-app.use('/test', testRouter)
+app.use('/users', usersRouter)
 //
 app.use(errorHandler)
 
