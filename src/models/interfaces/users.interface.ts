@@ -36,3 +36,8 @@ export interface AdminRegisterBody {
   confirm_password: string
   admin_secret_key: string
 }
+
+export interface LoginBody {
+  email: string
+  password: string
+}

@@ -61,6 +61,12 @@ class UserService {
     const [access_token, refresh_token] = token
     return { access_token, refresh_token }
   }
+
+  async login({ user_id, role }: { user_id: string; role: Role }) {
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({ user_id, role })
+
+    return { access_token, refresh_token }
+  }
 }
 
 const userService = new UserService()

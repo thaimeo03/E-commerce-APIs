@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { AdminRegisterBody, UserRegisterBody } from '../interfaces/users.interface'
+import { AdminRegisterBody, LoginBody, UserRegisterBody } from '../interfaces/users.interface'
 import { USER_MESSAGES } from '~/constants/messages'
 
 const registerSchema: Joi.PartialSchemaMap<any> = {
@@ -27,5 +27,16 @@ export const registerAdminSchema = Joi.object<AdminRegisterBody>({
   ...registerSchema,
   admin_secret_key: Joi.string().required().messages({
     'string.empty': USER_MESSAGES.ADMIN_SECRET_KEY_IS_REQUIRED
+  })
+})
+
+export const loginSchema = Joi.object<LoginBody>({
+  email: Joi.string().email().required().messages({
+    'string.empty': USER_MESSAGES.EMAIL_IS_REQUIRED,
+    'string.email': USER_MESSAGES.EMAIL_IS_INVALID
+  }),
+  password: Joi.string().min(6).required().messages({
+    'string.empty': USER_MESSAGES.PASSWORD_IS_REQUIRED,
+    'string.min': USER_MESSAGES.PASSWORD_MIN_LENGTH
   })
 })

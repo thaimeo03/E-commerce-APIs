@@ -10,5 +10,7 @@ export const USER_MESSAGES = {
   ADMIN_SECRET_KEY_NOT_MATCH: 'Admin secret key does not match',
   ADMIN_SECRET_KEY_IS_REQUIRED: 'Admin secret key is required',
   REGISTER_ADMIN_SUCCESSFULLY: 'Register admin account successfully',
-  EMAIL_ALREADY_EXIST: 'Email already exist'
+  EMAIL_ALREADY_EXIST: 'Email already exist',
+  LOGIN_SUCCESSFULLY: 'Login successfully',
+  EMAIL_OR_PASSWORD_INCORRECT: 'Email or password incorrect'
 } as const
