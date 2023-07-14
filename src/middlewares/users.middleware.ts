@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { ObjectId } from 'mongodb'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
@@ -7,6 +8,7 @@ import { AdminRegisterBody } from '~/models/interfaces/users.interface'
 import { loginSchema, registerAdminSchema } from '~/models/schemas/users.shema'
 import databaseService from '~/services/database.service'
 import hashPassword from '~/utils/hash'
+import { verifyToken } from '~/utils/jwt'
 import { wrapHandler } from '~/utils/wrapHandler'
 
 export const registerAdminValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -41,4 +43,44 @@ export const loginValidator = wrapHandler(async (req: Request, res: Response, ne
     })
   }
   req.user = user as User
+})
+
+export const accessTokenValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const bearerToken = req.header('Authorization')
+
+  if (!bearerToken) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.FOBIDDEN,
+      message: USER_MESSAGES.BEARER_TOKEN_IS_REQUIRED
+    })
+  }
+
+  const access_token = bearerToken.split(' ')[1]
+  if (!access_token) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.FOBIDDEN,
+      message: USER_MESSAGES.ACCESS_TOKEN_IS_REQUIRED
+    })
+  }
+
+  const decodedAccessToken = await verifyToken(access_token)
+  req.decodedAccessToken = decodedAccessToken
+})
+
+export const refreshTokenValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const refresh_token = req.body.refresh_token as string
+
+  const [decodedRefreshToken, result] = await Promise.all([
+    verifyToken(refresh_token),
+    databaseService.refreshTokens.findOne({ token: refresh_token })
+  ])
+
+  if (!result) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.NOT_FOUND,
+      message: USER_MESSAGES.REFRESH_TOKEN_NOT_FOUND
+    })
+  }
+
+  req.decodedRefreshToken = decodedRefreshToken
 })

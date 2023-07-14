@@ -25,3 +25,13 @@ export const loginController = wrapHandler(async (req: Request, res: Response, n
     result
   })
 })
+
+export const logoutController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const refresh_token = req.body.refresh_token as string
+
+  await userService.logout(refresh_token)
+
+  res.json({
+    message: USER_MESSAGES.LOGOUT_SUCCESSFULLY
+  })
+})

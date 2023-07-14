@@ -5,6 +5,7 @@ import { Role } from '~/constants/enums'
 import hashPassword from '~/utils/hash'
 import { signToken } from '~/utils/jwt'
 import 'dotenv/config'
+import RefreshToken from '~/models/database/RefreshToken'
 
 class UserService {
   async signAccessToken({ user_id, role }: { user_id: string; role?: Role }) {
@@ -59,13 +60,20 @@ class UserService {
       this.signAccessTokenAndRefreshToken({ user_id: _id.toString(), role: Role.Admin })
     ])
     const [access_token, refresh_token] = token
+    await databaseService.refreshTokens.insertOne(new RefreshToken({ user_id: _id.toString(), token: refresh_token }))
+
     return { access_token, refresh_token }
   }
 
   async login({ user_id, role }: { user_id: string; role: Role }) {
     const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({ user_id, role })
+    await databaseService.refreshTokens.insertOne(new RefreshToken({ user_id: user_id, token: refresh_token }))
 
     return { access_token, refresh_token }
+  }
+
+  async logout(refresh_token: string) {
+    await databaseService.refreshTokens.deleteOne({ token: refresh_token })
   }
 }
 

@@ -9,12 +9,12 @@ export const signToken = (payload: any, options?: jwt.SignOptions) => {
 
 export const verifyToken = (token: string) => {
   const privateKey = process.env.JWT_SECRET as string
-  return new Promise((resolve, reject) => {
+  return new Promise<jwt.JwtPayload>((resolve, reject) => {
     jwt.verify(token, privateKey, (err, decoded) => {
       if (err) {
         return reject(err)
       }
-      return resolve(decoded)
+      return resolve(decoded as jwt.JwtPayload)
     })
   })
 }
