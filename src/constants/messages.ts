@@ -8,5 +8,7 @@ export const USER_MESSAGES = {
   PASSWORD_MIN_LENGTH: 'Password must be at least 6 characters',
   CONFIRM_PASSWORD_DO_NOT_MATCH: 'Confirm password does not match',
   ADMIN_SECRET_KEY_NOT_MATCH: 'Admin secret key does not match',
-  ADMIN_SECRET_KEY_IS_REQUIRED: 'Admin secret key is required'
+  ADMIN_SECRET_KEY_IS_REQUIRED: 'Admin secret key is required',
+  REGISTER_ADMIN_SUCCESSFULLY: 'Register admin account successfully',
+  EMAIL_ALREADY_EXIST: 'Email already exist'
 } as const

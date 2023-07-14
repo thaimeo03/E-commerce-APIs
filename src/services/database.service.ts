@@ -23,9 +23,9 @@ class DatabaseService {
   }
 
   // Get collections
-  // get users() {
-  //   return this.db.collection(process.env.DB_USERS_COLLECTION as string)
-  // }
+  get users() {
+    return this.db.collection(process.env.DB_USERS_COLLECTION as string)
+  }
 }
 
 const databaseService = new DatabaseService()

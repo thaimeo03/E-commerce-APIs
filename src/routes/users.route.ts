@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { registerAdminController } from '~/controllers/users.controller'
 import { registerAdminValidator } from '~/middlewares/users.middleware'
-import { wrapHandler } from '~/utils/wrapHandler'
 
 const usersRouter = Router()
 

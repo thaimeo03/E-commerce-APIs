@@ -23,7 +23,7 @@ export default class User {
     this.username = user.username
     this.email = user.email
     this.password = user.password
-    this.forgot_password_token = ''
+    this.forgot_password_token = user.forgot_password_token || ''
     this.role = user.role || Role.User
 
     this.addresses = user.addresses || []
