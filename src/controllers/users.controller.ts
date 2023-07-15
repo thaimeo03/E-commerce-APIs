@@ -35,3 +35,17 @@ export const logoutController = wrapHandler(async (req: Request, res: Response, 
     message: USER_MESSAGES.LOGOUT_SUCCESSFULLY
   })
 })
+
+export const refreshTokenController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const old_refresh_token = req.body.refresh_token as string
+  const user_id = req.decodedRefreshToken?.user_id as string
+  const exp = req.decodedRefreshToken?.exp as number
+  const role = req.decodedRefreshToken?.role as Role
+
+  const result = await userService.refreshToken({ old_refresh_token, user_id, exp, role })
+
+  res.json({
+    message: USER_MESSAGES.REFRESH_TOKEN_SUCCESSFULLY,
+    result
+  })
+})

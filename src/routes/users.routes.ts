@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { loginController, logoutController, registerAdminController } from '~/controllers/users.controller'
+import {
+  loginController,
+  logoutController,
+  refreshTokenController,
+  registerAdminController
+} from '~/controllers/users.controller'
 import {
   accessTokenValidator,
   loginValidator,
@@ -21,5 +26,9 @@ usersRouter.post('/login', loginValidator, loginController)
 // Header: access_token
 // Body: refresh_token
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, logoutController)
+
+// Refresh token
+// Body: refresh_token
+usersRouter.post('/refresh-token', refreshTokenValidator, refreshTokenController)
 
 export default usersRouter
