@@ -20,3 +20,7 @@ export const USER_MESSAGES = {
   LOGOUT_SUCCESSFULLY: 'Logout successfully',
   REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token successfully'
 } as const
+
+export const MEDIAS_MESSAGES = {
+  UPLOAD_IMAGES_SUCCESSFULLY: 'Upload image successfully'
+}

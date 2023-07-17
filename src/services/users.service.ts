@@ -44,27 +44,6 @@ class UserService {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
   }
 
-  async registerAdmin(payload: { username: string; email: string; password: string }) {
-    const _id = new ObjectId()
-    const forgot_password_token = await this.signForgotPasswordToken({ user_id: _id.toString() })
-    const [_, token] = await Promise.all([
-      await databaseService.users.insertOne(
-        new User({
-          ...payload,
-          password: hashPassword(payload.password),
-          _id,
-          role: Role.Admin,
-          forgot_password_token
-        })
-      ),
-      this.signAccessTokenAndRefreshToken({ user_id: _id.toString(), role: Role.Admin })
-    ])
-    const [access_token, refresh_token] = token
-    await databaseService.refreshTokens.insertOne(new RefreshToken({ user_id: _id.toString(), token: refresh_token }))
-
-    return { access_token, refresh_token }
-  }
-
   async login({ user_id, role }: { user_id: string; role: Role }) {
     const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({ user_id, role })
     await databaseService.refreshTokens.insertOne(new RefreshToken({ user_id: user_id, token: refresh_token }))
