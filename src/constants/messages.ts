@@ -30,7 +30,11 @@ export const CATEGORY_MESSAGES = {
   NAME_CATEGORY_IS_REQUIRED: 'Name category is required',
   NAME_CATEGORY_MIN_LENGTH: 'Name category must be at least 1 characters',
   NAME_CATEGORY_MAX_LENGTH: 'Name category must be at most 50 characters',
-  CREATE_CATEGORY_SUCCESSFULLY: 'Create new category successfully'
+  CREATE_CATEGORY_SUCCESSFULLY: 'Create new category successfully',
+  CATEGORY_ALREADY_EXIST: 'Category already exist',
+  CATEGORY_NOT_FOUND: 'Category not found',
+  DELETE_CATEGORY_SUCCESSFULLY: 'Delete category successfully',
+  UPDATE_CATEGORY_SUCCESSFULLY: 'Update category successfully'
 } as const
 
 export const MEDIAS_MESSAGES = {
