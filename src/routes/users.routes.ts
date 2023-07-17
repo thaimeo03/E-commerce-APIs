@@ -1,16 +1,6 @@
 import { Router } from 'express'
-import {
-  loginController,
-  logoutController,
-  refreshTokenController,
-  registerAdminController
-} from '~/controllers/users.controller'
-import {
-  accessTokenValidator,
-  loginValidator,
-  refreshTokenValidator,
-  registerAdminValidator
-} from '~/middlewares/users.middleware'
+import { loginController, logoutController, refreshTokenController } from '~/controllers/users.controller'
+import { accessTokenValidator, loginValidator, refreshTokenValidator } from '~/middlewares/users.middleware'
 
 const usersRouter = Router()
 

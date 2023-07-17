@@ -6,6 +6,7 @@ import mediasRouter from './routes/medias.routes'
 import { initUploadFile } from './utils/upload'
 import { UPLOAD_IMAGE_DIR } from './constants/dir'
 import adminRouter from './routes/admins.routes'
+import categoriesRouter from './routes/categories.routes'
 
 const app = express()
 const HOSTNAME = 'localhost'
@@ -16,6 +17,7 @@ databaseService.connect()
 app.use(express.json())
 // routes here
 app.use('/admin', adminRouter)
+app.use('/categories', categoriesRouter)
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/static/image', express.static(UPLOAD_IMAGE_DIR))
