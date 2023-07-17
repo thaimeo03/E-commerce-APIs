@@ -37,6 +37,17 @@ export const CATEGORY_MESSAGES = {
   UPDATE_CATEGORY_SUCCESSFULLY: 'Update category successfully'
 } as const
 
+export const PRODUCT_MESSAGES = {
+  NAME_IS_REQUIRED: 'Name is required',
+  NAME_MIN_LENGTH: 'Name must be at least 1 characters',
+  NAME_MAX_LENGTH: 'Name must be at most 50 characters',
+  PRICE_AND_QUANTITY_MUST_BE_POSITIVE: 'Price and quantity must be positive',
+  CATEGORY_MUST_BE_SELECTED: 'Category must be selected',
+  ADD_PRODUCT_SUCCESSFULLY: 'Add product successfully',
+  MAIN_IMAGE_IS_REQUIRED: 'Main image is required',
+  QUANTITY_IS_REQUIRED: 'Quantity is required'
+}
+
 export const MEDIAS_MESSAGES = {
   UPLOAD_IMAGES_SUCCESSFULLY: 'Upload image successfully'
 }
