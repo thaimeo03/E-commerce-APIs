@@ -11,9 +11,9 @@ class CategoryService {
     await databaseService.categories.deleteOne({ _id: new ObjectId(category_id) })
   }
 
-  async updateCategory(name: string) {
+  async updateCategory({ name, category_id }: { name: string; category_id: string }) {
     const result = await databaseService.categories.findOneAndUpdate(
-      { name },
+      { _id: new ObjectId(category_id) },
       {
         $set: { name },
         $currentDate: { updated_at: true }

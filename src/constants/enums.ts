@@ -3,3 +3,9 @@ export enum Role {
   Admin,
   Banned
 }
+
+export enum Status {
+  InStock,
+  OutStock,
+  Sold
+}

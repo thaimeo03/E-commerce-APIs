@@ -24,8 +24,9 @@ export const deleteCategoryController = wrapHandler(async (req: Request, res: Re
 })
 
 export const updateCategoryController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { category_id } = req.params
   const { name } = req.body as CategoryBody
-  const result = await categoryService.updateCategory(name)
+  const result = await categoryService.updateCategory({ name, category_id })
 
   return res.json({
     message: CATEGORY_MESSAGES.UPDATE_CATEGORY_SUCCESSFULLY,

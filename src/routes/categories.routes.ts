@@ -28,7 +28,15 @@ categoriesRouter.delete(
 
 // Update category
 // Header: access_token
-// Body: name
-categoriesRouter.put('/', accessTokenValidator, isAdminValidator, nameCategoryValidator, updateCategoryController)
+// Params: category_id
+// Body: name (new_name)
+categoriesRouter.put(
+  '/:category_id',
+  accessTokenValidator,
+  isAdminValidator,
+  idCategoryValidator,
+  nameCategoryValidator,
+  updateCategoryController
+)
 
 export default categoriesRouter

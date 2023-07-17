@@ -7,6 +7,7 @@ import { initUploadFile } from './utils/upload'
 import { UPLOAD_IMAGE_DIR } from './constants/dir'
 import adminRouter from './routes/admins.routes'
 import categoriesRouter from './routes/categories.routes'
+import productRouter from './routes/products.routes'
 
 const app = express()
 const HOSTNAME = 'localhost'
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use('/admin', adminRouter)
 app.use('/categories', categoriesRouter)
 app.use('/users', usersRouter)
+app.use('/products', productRouter)
 app.use('/medias', mediasRouter)
 app.use('/static/image', express.static(UPLOAD_IMAGE_DIR))
 //
