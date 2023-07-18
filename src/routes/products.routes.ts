@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { addProductController } from '~/controllers/products.controller'
+import { addProductController, deleteProductController } from '~/controllers/products.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
-import { addProductValidator } from '~/middlewares/products.validator'
+import { addProductValidator, idProductValidator } from '~/middlewares/products.validator'
 import { accessTokenValidator } from '~/middlewares/users.middleware'
 
 const productRouter = Router()
@@ -10,5 +10,16 @@ const productRouter = Router()
 // Header: access_token
 // Body: ProductBody
 productRouter.post('/add', accessTokenValidator, isAdminValidator, addProductValidator, addProductController)
+
+// Delete product
+// Header: access_token
+// Params: product_id
+productRouter.delete(
+  '/:product_id',
+  accessTokenValidator,
+  isAdminValidator,
+  idProductValidator,
+  deleteProductController
+)
 
 export default productRouter

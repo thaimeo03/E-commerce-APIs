@@ -3,6 +3,7 @@ import { File } from 'formidable'
 import fs from 'fs'
 import crypto from 'crypto'
 import { UPLOAD_DIR_TEMP, UPLOAD_IMAGE_DIR } from '~/constants/dir'
+import path from 'path'
 
 export const initUploadFile = () => {
   ;[UPLOAD_DIR_TEMP, UPLOAD_IMAGE_DIR].forEach((dir) => {
@@ -50,4 +51,14 @@ export const uploadImages = async (req: Request) => {
       resolve(files.images as File[])
     })
   })
+}
+
+export const deleteImageFileByUrl = (urls: string[]) => {
+  return Promise.resolve(
+    urls.forEach((url) => {
+      const urlSplit = url.split('/')
+      const imageDir = path.join(UPLOAD_IMAGE_DIR, urlSplit[urlSplit.length - 1])
+      fs.unlinkSync(imageDir)
+    })
+  )
 }

@@ -2,6 +2,7 @@ import { ProductBody } from '~/models/interfaces/products.interface'
 import databaseService from './database.service'
 import Category from '~/models/database/Category'
 import Product from '~/models/database/Product'
+import { deleteImageFileByUrl } from '~/utils/upload'
 
 class ProductService {
   async addProduct(payload: ProductBody) {
@@ -21,6 +22,13 @@ class ProductService {
     )
 
     await databaseService.products.insertOne(new Product(payload))
+  }
+
+  async deleteProduct(product: Product) {
+    const imagesUrl = product.images
+    imagesUrl.push(product.main_image)
+
+    await Promise.all([deleteImageFileByUrl(imagesUrl), databaseService.products.deleteOne({ _id: product._id })])
   }
 }
 

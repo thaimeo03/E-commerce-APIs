@@ -45,7 +45,9 @@ export const PRODUCT_MESSAGES = {
   CATEGORY_MUST_BE_SELECTED: 'Category must be selected',
   ADD_PRODUCT_SUCCESSFULLY: 'Add product successfully',
   MAIN_IMAGE_IS_REQUIRED: 'Main image is required',
-  QUANTITY_IS_REQUIRED: 'Quantity is required'
+  QUANTITY_IS_REQUIRED: 'Quantity is required',
+  PRODUCT_NOT_FOUND: 'Product not found',
+  DELETE_PRODUCT_SUCCESSFULLY: 'Delete product successfully'
 }
 
 export const MEDIAS_MESSAGES = {

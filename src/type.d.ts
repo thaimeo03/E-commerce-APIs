@@ -2,6 +2,7 @@ import { Request } from 'express'
 import User from './models/database/User'
 import jwt from 'jsonwebtoken'
 import { Role } from './constants/enums'
+import Product from './models/database/Product'
 
 interface extendsJwtPayload extends jwt.JwtPayload {
   user_id?: string
@@ -14,5 +15,6 @@ declare module 'express' {
     user?: User
     decodedAccessToken?: extendsJwtPayload
     decodedRefreshToken?: extendsJwtPayload
+    product?: Product
   }
 }
