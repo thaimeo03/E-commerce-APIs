@@ -30,6 +30,27 @@ class ProductService {
 
     await Promise.all([deleteImageFileByUrl(imagesUrl), databaseService.products.deleteOne({ _id: product._id })])
   }
+
+  async removeProductFromCategory({ product, name }: { product: Product; name: string }) {
+    const { categories } = product
+    if (categories.length === 1) {
+      await this.deleteProduct(product)
+    } else {
+      await databaseService.products.updateOne(
+        {
+          _id: product._id
+        },
+        {
+          $pull: {
+            categories: name
+          },
+          $currentDate: {
+            updated_at: true
+          }
+        }
+      )
+    }
+  }
 }
 
 const productService = new ProductService()

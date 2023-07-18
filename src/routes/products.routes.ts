@@ -1,6 +1,15 @@
 import { Router } from 'express'
-import { addProductController, deleteProductController } from '~/controllers/products.controller'
+import {
+  addProductController,
+  deleteProductController,
+  removeProductFromCategoryController
+} from '~/controllers/products.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
+import {
+  idCategoryValidator,
+  nameCategoryValidator,
+  nameRemoveProductFromCategoryValidator
+} from '~/middlewares/categories.middleware'
 import { addProductValidator, idProductValidator } from '~/middlewares/products.validator'
 import { accessTokenValidator } from '~/middlewares/users.middleware'
 
@@ -20,6 +29,19 @@ productRouter.delete(
   isAdminValidator,
   idProductValidator,
   deleteProductController
+)
+
+// Remove product from a category
+// Header: access_token
+// Params: product_id
+// Body: name
+productRouter.post(
+  '/:product_id/remove',
+  accessTokenValidator,
+  isAdminValidator,
+  idProductValidator,
+  nameRemoveProductFromCategoryValidator,
+  removeProductFromCategoryController
 )
 
 export default productRouter

@@ -34,7 +34,8 @@ export const CATEGORY_MESSAGES = {
   CATEGORY_ALREADY_EXIST: 'Category already exist',
   CATEGORY_NOT_FOUND: 'Category not found',
   DELETE_CATEGORY_SUCCESSFULLY: 'Delete category successfully',
-  UPDATE_CATEGORY_SUCCESSFULLY: 'Update category successfully'
+  UPDATE_CATEGORY_SUCCESSFULLY: 'Update category successfully',
+  PRODUCT_NOT_IN_CATEGORY: 'Product not in category'
 } as const
 
 export const PRODUCT_MESSAGES = {
@@ -47,7 +48,8 @@ export const PRODUCT_MESSAGES = {
   MAIN_IMAGE_IS_REQUIRED: 'Main image is required',
   QUANTITY_IS_REQUIRED: 'Quantity is required',
   PRODUCT_NOT_FOUND: 'Product not found',
-  DELETE_PRODUCT_SUCCESSFULLY: 'Delete product successfully'
+  DELETE_PRODUCT_SUCCESSFULLY: 'Delete product successfully',
+  REMOVE_PRODUCT_FROM_CATEGORY_SUCCESSFULLY: 'Remove product from category successfully'
 }
 
 export const MEDIAS_MESSAGES = {
