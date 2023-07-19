@@ -6,6 +6,5 @@ export enum Role {
 
 export enum Status {
   InStock,
-  OutStock,
-  Sold
+  OutStock
 }

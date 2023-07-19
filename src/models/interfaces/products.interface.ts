@@ -16,6 +16,7 @@ export interface ProductConstructor {
   colors?: string[] // một product có thể có vài color
   quantity: number // có sẵn
   status?: Status
+  sold?: number
   categories: string[] // chứa tên các loại sản phẩm nhau
   created_at?: Date
   updated_at?: Date
