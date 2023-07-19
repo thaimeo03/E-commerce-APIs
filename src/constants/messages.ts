@@ -17,7 +17,8 @@ export const USER_MESSAGES = {
   USER_NOT_FOUND: 'User not found',
   REFRESH_TOKEN_NOT_FOUND: 'Refresh token not found',
   LOGOUT_SUCCESSFULLY: 'Logout successfully',
-  REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token successfully'
+  REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token successfully',
+  ACCOUNT_IS_BANNED: 'Account is banned'
 } as const
 
 export const ADMIN_MESSAGES = {
@@ -35,7 +36,8 @@ export const CATEGORY_MESSAGES = {
   CATEGORY_NOT_FOUND: 'Category not found',
   DELETE_CATEGORY_SUCCESSFULLY: 'Delete category successfully',
   UPDATE_CATEGORY_SUCCESSFULLY: 'Update category successfully',
-  PRODUCT_NOT_IN_CATEGORY: 'Product not in category'
+  PRODUCT_NOT_IN_CATEGORY: 'Product not in category',
+  GET_CATEGORIES_SUCCESSFULLY: 'Get categories successfully'
 } as const
 
 export const PRODUCT_MESSAGES = {

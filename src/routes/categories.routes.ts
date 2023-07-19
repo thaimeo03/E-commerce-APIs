@@ -2,11 +2,12 @@ import { Router } from 'express'
 import {
   createCategoryController,
   deleteCategoryController,
+  getCategoriesController,
   updateCategoryController
 } from '~/controllers/categories.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
 import { idCategoryValidator, nameCategoryValidator } from '~/middlewares/categories.middleware'
-import { accessTokenValidator } from '~/middlewares/users.middleware'
+import { accessTokenValidator, isUserValidator } from '~/middlewares/users.middleware'
 
 const categoriesRouter = Router()
 
@@ -38,5 +39,9 @@ categoriesRouter.put(
   nameCategoryValidator,
   updateCategoryController
 )
+
+// Get all categories
+// Header: access_token
+categoriesRouter.get('/', accessTokenValidator, isUserValidator, getCategoriesController)
 
 export default categoriesRouter

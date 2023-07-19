@@ -25,6 +25,12 @@ class CategoryService {
 
     return result.value
   }
+
+  async getCategories() {
+    const result = databaseService.categories.find()
+
+    return result.toArray()
+  }
 }
 
 const categoryService = new CategoryService()

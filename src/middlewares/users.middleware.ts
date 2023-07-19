@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { Role } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
@@ -21,6 +22,16 @@ export const loginValidator = wrapHandler(async (req: Request, res: Response, ne
     })
   }
   req.user = user as User
+})
+
+export const isUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const role = req.decodedAccessToken?.role as Role
+  if (role !== Role.Admin && role !== Role.User) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.ACCOUNT_IS_BANNED,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
 })
 
 export const accessTokenValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {

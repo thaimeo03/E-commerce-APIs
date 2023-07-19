@@ -33,3 +33,12 @@ export const updateCategoryController = wrapHandler(async (req: Request, res: Re
     result
   })
 })
+
+export const getCategoriesController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const result = await categoryService.getCategories()
+
+  return res.json({
+    message: CATEGORY_MESSAGES.GET_CATEGORIES_SUCCESSFULLY,
+    result
+  })
+})
