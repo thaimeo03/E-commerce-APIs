@@ -35,3 +35,14 @@ export const removeProductFromCategoryController = wrapHandler(
     })
   }
 )
+
+export const updateProductController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const payload = req.body as ProductBody
+  const { product_id } = req.params
+  const result = await productService.updateProduct({ payload, product_id })
+
+  return res.json({
+    message: PRODUCT_MESSAGES.UPDATE_PRODUCT_SUCCESSFULLY,
+    result
+  })
+})

@@ -49,7 +49,8 @@ export const PRODUCT_MESSAGES = {
   QUANTITY_IS_REQUIRED: 'Quantity is required',
   PRODUCT_NOT_FOUND: 'Product not found',
   DELETE_PRODUCT_SUCCESSFULLY: 'Delete product successfully',
-  REMOVE_PRODUCT_FROM_CATEGORY_SUCCESSFULLY: 'Remove product from category successfully'
+  REMOVE_PRODUCT_FROM_CATEGORY_SUCCESSFULLY: 'Remove product from category successfully',
+  UPDATE_PRODUCT_SUCCESSFULLY: 'Update product successfully'
 }
 
 export const MEDIAS_MESSAGES = {

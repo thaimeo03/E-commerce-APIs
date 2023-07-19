@@ -2,14 +2,11 @@ import { Router } from 'express'
 import {
   addProductController,
   deleteProductController,
-  removeProductFromCategoryController
+  removeProductFromCategoryController,
+  updateProductController
 } from '~/controllers/products.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
-import {
-  idCategoryValidator,
-  nameCategoryValidator,
-  nameRemoveProductFromCategoryValidator
-} from '~/middlewares/categories.middleware'
+import { nameRemoveProductFromCategoryValidator } from '~/middlewares/categories.middleware'
 import { addProductValidator, idProductValidator } from '~/middlewares/products.validator'
 import { accessTokenValidator } from '~/middlewares/users.middleware'
 
@@ -42,6 +39,19 @@ productRouter.post(
   idProductValidator,
   nameRemoveProductFromCategoryValidator,
   removeProductFromCategoryController
+)
+
+// Update product
+// Header: access_token
+// Params: product_id
+// Body: ProductBody
+productRouter.put(
+  '/update/:product_id',
+  accessTokenValidator,
+  isAdminValidator,
+  idProductValidator,
+  addProductValidator,
+  updateProductController
 )
 
 export default productRouter

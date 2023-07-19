@@ -3,6 +3,8 @@ import databaseService from './database.service'
 import Category from '~/models/database/Category'
 import Product from '~/models/database/Product'
 import { deleteImageFileByUrl } from '~/utils/upload'
+import { ObjectId, WithId } from 'mongodb'
+import { omit } from 'lodash'
 
 class ProductService {
   async addProduct(payload: ProductBody) {
@@ -50,6 +52,27 @@ class ProductService {
         }
       )
     }
+  }
+
+  async updateProduct({ payload, product_id }: { payload: ProductBody; product_id: string }) {
+    const payloadNotCategories = omit(payload, ['categories'])
+    const result = await databaseService.products.findOneAndUpdate(
+      {
+        _id: new ObjectId(product_id)
+      },
+      {
+        $set: payloadNotCategories,
+        $currentDate: {
+          updated_at: true
+        }
+      },
+      {
+        upsert: true,
+        returnDocument: 'after'
+      }
+    )
+
+    return result.value as WithId<Product>
   }
 }
 
