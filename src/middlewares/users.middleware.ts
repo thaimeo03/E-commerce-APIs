@@ -24,7 +24,7 @@ export const loginValidator = wrapHandler(async (req: Request, res: Response, ne
   req.user = user as User
 })
 
-export const isUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+const isUserLogic = async (req: Request, res: Response, next: NextFunction) => {
   const role = req.decodedAccessToken?.role as Role
   if (role !== Role.Admin && role !== Role.User) {
     throw new ErrorWithStatus({
@@ -32,9 +32,11 @@ export const isUserValidator = wrapHandler(async (req: Request, res: Response, n
       status: HTTP_STATUS.BAD_REQUEST
     })
   }
-})
+}
 
-export const accessTokenValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const isUserValidator = wrapHandler(isUserLogic)
+
+const accessTokenLogic = async (req: Request, res: Response, next: NextFunction) => {
   const bearerToken = req.header('Authorization')
 
   if (!bearerToken) {
@@ -54,7 +56,9 @@ export const accessTokenValidator = wrapHandler(async (req: Request, res: Respon
 
   const decodedAccessToken = await verifyToken(access_token)
   req.decodedAccessToken = decodedAccessToken
-})
+}
+
+export const accessTokenValidator = wrapHandler(accessTokenLogic)
 
 export const refreshTokenValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const refresh_token = req.body.refresh_token as string
@@ -72,4 +76,11 @@ export const refreshTokenValidator = wrapHandler(async (req: Request, res: Respo
   }
 
   req.decodedRefreshToken = decodedRefreshToken
+})
+
+export const publicUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  if (req.header('Authorization')) {
+    await accessTokenLogic(req, res, next)
+    await isUserLogic(req, res, next)
+  }
 })

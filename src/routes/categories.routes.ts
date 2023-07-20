@@ -7,7 +7,7 @@ import {
 } from '~/controllers/categories.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
 import { idCategoryValidator, nameCategoryValidator } from '~/middlewares/categories.middleware'
-import { accessTokenValidator, isUserValidator } from '~/middlewares/users.middleware'
+import { accessTokenValidator, isUserValidator, publicUserValidator } from '~/middlewares/users.middleware'
 
 const categoriesRouter = Router()
 
@@ -42,6 +42,6 @@ categoriesRouter.put(
 
 // Get all categories
 // Header: access_token
-categoriesRouter.get('/', accessTokenValidator, isUserValidator, getCategoriesController)
+categoriesRouter.get('/', publicUserValidator, getCategoriesController)
 
 export default categoriesRouter
