@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { PRODUCT_MESSAGES } from '~/constants/messages'
 import Product from '~/models/database/Product'
-import { ProductBody } from '~/models/interfaces/products.interface'
+import { ProductBody, ProductQueries } from '~/models/interfaces/products.interface'
 import productService from '~/services/products.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -43,6 +43,18 @@ export const updateProductController = wrapHandler(async (req: Request, res: Res
 
   return res.json({
     message: PRODUCT_MESSAGES.UPDATE_PRODUCT_SUCCESSFULLY,
+    result
+  })
+})
+
+export const getProductsController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const category_name = req.category?.name
+  const { name, order, sort_by, limit, page } = req.query as ProductQueries
+
+  const result = await productService.getProducts(category_name, { name, order, sort_by, limit, page })
+
+  return res.json({
+    message: PRODUCT_MESSAGES.GET_PRODUCTS_SUCCESSFULLY,
     result
   })
 })

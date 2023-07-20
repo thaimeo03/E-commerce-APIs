@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { ProductBody } from '../interfaces/products.interface'
+import { ProductBody, ProductQueries } from '../interfaces/products.interface'
 import { PRODUCT_MESSAGES } from '~/constants/messages'
 
 export const addProductSchema = Joi.object<ProductBody>({

@@ -50,11 +50,13 @@ export const nameRemoveProductFromCategoryValidator = wrapHandler(
 
 export const idCategoryValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { category_id } = req.params
-  const isExisted = await databaseService.categories.findOne({ _id: new ObjectId(category_id) })
-  if (!isExisted) {
+  const category = await databaseService.categories.findOne({ _id: new ObjectId(category_id) })
+  if (!category) {
     throw new ErrorWithStatus({
       message: CATEGORY_MESSAGES.CATEGORY_NOT_FOUND,
       status: HTTP_STATUS.NOT_FOUND
     })
   }
+
+  req.category = category
 })

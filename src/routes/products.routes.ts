@@ -2,13 +2,14 @@ import { Router } from 'express'
 import {
   addProductController,
   deleteProductController,
+  getProductsController,
   removeProductFromCategoryController,
   updateProductController
 } from '~/controllers/products.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
-import { nameRemoveProductFromCategoryValidator } from '~/middlewares/categories.middleware'
-import { addProductValidator, idProductValidator } from '~/middlewares/products.validator'
-import { accessTokenValidator } from '~/middlewares/users.middleware'
+import { idCategoryValidator, nameRemoveProductFromCategoryValidator } from '~/middlewares/categories.middleware'
+import { addProductValidator, getProductsValidator, idProductValidator } from '~/middlewares/products.validator'
+import { accessTokenValidator, isUserValidator } from '~/middlewares/users.middleware'
 
 const productRouter = Router()
 
@@ -53,5 +54,10 @@ productRouter.put(
   addProductValidator,
   updateProductController
 )
+
+// Get products
+// Header: access_token
+// Query: category_id, page, limit, order: 'desc' || 'asc' (default: desc), sort_by: 'created_at' || 'sold' || 'price' (default: created_at), rating (>= rating), name **** Miss rating
+productRouter.get('/', accessTokenValidator, isUserValidator, getProductsValidator, getProductsController) // miss productQueryValidator
 
 export default productRouter

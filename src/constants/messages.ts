@@ -52,7 +52,12 @@ export const PRODUCT_MESSAGES = {
   PRODUCT_NOT_FOUND: 'Product not found',
   DELETE_PRODUCT_SUCCESSFULLY: 'Delete product successfully',
   REMOVE_PRODUCT_FROM_CATEGORY_SUCCESSFULLY: 'Remove product from category successfully',
-  UPDATE_PRODUCT_SUCCESSFULLY: 'Update product successfully'
+  UPDATE_PRODUCT_SUCCESSFULLY: 'Update product successfully',
+  GET_PRODUCTS_SUCCESSFULLY: 'Get products successfully',
+  INVALID_PAGE: 'page size must be greater than 0',
+  INVALID_LIMIT: 'limit must be greater than 0 and less than 100',
+  INVALID_ORDER: 'order must be asc or desc',
+  INVALID_SORT_BY: 'sort_by must be created_at or sold or price'
 }
 
 export const MEDIAS_MESSAGES = {

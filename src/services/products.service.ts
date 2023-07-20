@@ -1,4 +1,4 @@
-import { ProductBody } from '~/models/interfaces/products.interface'
+import { ProductBody, ProductQueries } from '~/models/interfaces/products.interface'
 import databaseService from './database.service'
 import Category from '~/models/database/Category'
 import Product from '~/models/database/Product'
@@ -73,6 +73,65 @@ class ProductService {
     )
 
     return result.value as WithId<Product>
+  }
+
+  async getProducts(category_name: string | undefined, { name, order, sort_by, limit, page }: ProductQueries) {
+    const categories_query = category_name ? { categories: category_name } : undefined
+    const name_query = name ? { name: { $regex: name.replace(/-/g, ' ') } } : undefined
+    const order_query = order === 'asc' ? 1 : -1 // default -1
+    const sort_key = sort_by === 'price' ? 'price.regular' : sort_by || 'created_at'
+    const sort_query = {
+      [sort_key]: order_query
+    }
+    const page_query = Number(page) || 1
+    const limit_query = Number(limit) || 20
+
+    const [products, total] = await Promise.all([
+      await databaseService.products
+        .aggregate([
+          {
+            $match: {
+              ...categories_query,
+              ...name_query
+            }
+          },
+          {
+            $skip: (page_query - 1) * limit_query
+          },
+          {
+            $limit: limit_query
+          },
+          {
+            $sort: sort_query
+          },
+          {
+            $project: {
+              description: 0,
+              colors: 0,
+              status: 0,
+              quantity: 0,
+              categories: 0,
+              updated_at: 0
+            }
+          }
+        ])
+        .toArray(),
+      await databaseService.products.countDocuments({
+        ...categories_query,
+        ...name_query
+      })
+    ])
+
+    const total_page = Math.ceil(total / limit_query)
+
+    return {
+      products,
+      pagination: {
+        total_page,
+        page: page_query,
+        limit: limit_query
+      }
+    }
   }
 }
 

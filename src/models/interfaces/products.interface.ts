@@ -33,3 +33,13 @@ export interface ProductBody {
   status?: Status
   categories: string[] // chứa tên các loại sản phẩm nhau
 }
+
+export interface ProductQueries {
+  page?: string
+  limit?: string
+  order?: 'desc' | 'asc'
+  sort_by?: 'created_at' | 'sold' | 'price'
+  // rating?: number
+  name?: string
+  category_id?: string
+}
