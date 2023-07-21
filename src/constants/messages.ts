@@ -62,4 +62,14 @@ export const PRODUCT_MESSAGES = {
 
 export const MEDIAS_MESSAGES = {
   UPLOAD_IMAGES_SUCCESSFULLY: 'Upload image successfully'
-}
+} as const
+
+export const CART_MESSAGES = {
+  QUANTITY_IS_REQUIRED: 'Quantity is required',
+  QUANTITY_MIN: 'Quantity must be at least 1',
+  PRODUCT_ID_IS_REQUIRED: 'Product id is required',
+  QUANTITY_LIMIT: 'Quantities have reached the limit',
+  PRODUCT_NOT_FOUND_OR_OUT_OF_STOCK: 'Product not found or out of stock',
+  ADD_TO_CART_SUCCESSFULLY: 'Add product to cart successfully',
+  PRODUCT_ALREADY_ADDED: 'Product already added'
+} as const

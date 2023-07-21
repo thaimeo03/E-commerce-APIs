@@ -4,6 +4,7 @@ import User from '~/models/database/User'
 import RefreshToken from '~/models/database/RefreshToken'
 import Category from '~/models/database/Category'
 import Product from '~/models/database/Product'
+import Cart from '~/models/database/Cart'
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@e-commerce.relh9wj.mongodb.net/?retryWrites=true&w=majority`
 
@@ -41,6 +42,10 @@ class DatabaseService {
 
   get products(): Collection<Product> {
     return this.db.collection(process.env.DB_PRODUCTS_COLLECTION as string)
+  }
+
+  get carts(): Collection<Cart> {
+    return this.db.collection(process.env.DB_CARTS_COLLECTION as string)
   }
 }
 

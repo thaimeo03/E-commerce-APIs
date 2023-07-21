@@ -8,6 +8,7 @@ import { UPLOAD_IMAGE_DIR } from './constants/dir'
 import adminRouter from './routes/admins.routes'
 import categoriesRouter from './routes/categories.routes'
 import productRouter from './routes/products.routes'
+import cartsRouter from './routes/cart.routes'
 
 const app = express()
 const HOSTNAME = 'localhost'
@@ -22,8 +23,11 @@ app.use('/categories', categoriesRouter)
 app.use('/users', usersRouter)
 app.use('/products', productRouter)
 app.use('/medias', mediasRouter)
+app.use('/carts', cartsRouter)
 app.use('/static/image', express.static(UPLOAD_IMAGE_DIR))
 //
+
+// Error handling
 app.use(errorHandler)
 
 app.listen(PORT, HOSTNAME, function () {
