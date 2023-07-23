@@ -71,5 +71,6 @@ export const CART_MESSAGES = {
   QUANTITY_LIMIT: 'Quantities have reached the limit',
   PRODUCT_NOT_FOUND_OR_OUT_OF_STOCK: 'Product not found or out of stock',
   ADD_TO_CART_SUCCESSFULLY: 'Add product to cart successfully',
-  PRODUCT_ALREADY_ADDED: 'Product already added'
+  PRODUCT_ALREADY_ADDED: 'Product already added',
+  REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully'
 } as const

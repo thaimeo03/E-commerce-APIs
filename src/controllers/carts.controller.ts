@@ -14,3 +14,14 @@ export const addToCardController = wrapHandler(async (req: Request, res: Respons
     result
   })
 })
+
+export const removeProductFromCartController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+  const product_id = req.params.product_id
+  const result = await cartService.removeProductFromCart({ product_id, user_id })
+
+  res.json({
+    message: CART_MESSAGES.REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY,
+    result
+  })
+})

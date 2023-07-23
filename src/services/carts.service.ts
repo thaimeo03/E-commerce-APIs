@@ -55,6 +55,29 @@ class CartService {
 
     return result.value as Cart
   }
+
+  async removeProductFromCart({ product_id, user_id }: { product_id: string; user_id: string }) {
+    const result = await databaseService.carts.findOneAndUpdate(
+      {
+        user_id: new ObjectId(user_id)
+      },
+      {
+        $pull: {
+          products_added: {
+            product_id: new ObjectId(product_id)
+          }
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+
+    return result.value
+  }
 }
 
 const cartService = new CartService()
