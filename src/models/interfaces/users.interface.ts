@@ -15,7 +15,7 @@ export interface UserConstructor {
   role?: Role
 
   addresses?: Address[] // một user có thể có vài địa chỉ
-  phone?: number[] // một có thể có vài địa chỉ
+  phone?: string[] // một có thể có vài địa chỉ
   avatar?: string
   day_of_birth?: Date
   created_at?: Date

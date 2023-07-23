@@ -11,7 +11,7 @@ export default class User {
   role?: Role
 
   addresses: Address[] // một user có thể có vài địa chỉ
-  phone: number[] // một có thể có vài địa chỉ
+  phone: string[] // một có thể có vài số điện thoại
   avatar: string
   day_of_birth: Date
   created_at: Date

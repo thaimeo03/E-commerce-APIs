@@ -74,3 +74,5 @@ export const CART_MESSAGES = {
   PRODUCT_ALREADY_ADDED: 'Product already added',
   REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully'
 } as const
+
+export const ORDER_MESSAGES = {} as const
