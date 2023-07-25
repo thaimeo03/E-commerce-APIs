@@ -8,9 +8,7 @@ import { addToCartSchema } from '~/models/schemas/carts.schema'
 import databaseService from '~/services/database.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
-export const addToCardValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const value = await addToCartSchema.validateAsync(req.body as ItemCartBody, { abortEarly: false })
-
+export const checkProductInfo = async (value: ItemCartBody) => {
   const { product_id, quantity, color } = value
 
   const product = await databaseService.products.findOne({ _id: new ObjectId(product_id) })
@@ -36,4 +34,9 @@ export const addToCardValidator = wrapHandler(async (req: Request, res: Response
       })
     }
   }
+}
+
+export const addToCardValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const value = await addToCartSchema.validateAsync(req.body as ItemCartBody, { abortEarly: false })
+  await checkProductInfo(value)
 })

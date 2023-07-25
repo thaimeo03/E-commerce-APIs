@@ -75,4 +75,15 @@ export const CART_MESSAGES = {
   REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully'
 } as const
 
-export const ORDER_MESSAGES = {} as const
+export const ORDER_MESSAGES = {
+  BILLING_ADDRESS_IS_REQUIRED: 'Billing address is required',
+  RECEIVE_PHONE_IS_REQUIRED: 'Receive phone is required',
+  BILLING_ADDRESS_MUST_BE_IN_ADDRESSES_USER: 'Billing address must be in your addresses',
+  RECEIVE_PHONE_MUST_BE_IN_PHONES_USER: 'Receive phone must be in your phones',
+  PRODUCT_INFO_IS_REQUIRED: 'Product info is required',
+  ORDER_PRODUCT_SUCCESSFULLY: 'Order product successfully',
+  ORDER_PRODUCTS_SUCCESSFULLY: 'Order products successfully',
+  CART_MUST_HAVE_AT_LEAST_ONE_PRODUCT: 'Cart must have at least one product',
+  STREET_ADDRESS_IS_REQUIRED: 'Street address is required',
+  CITY_ADDRESS_IS_REQUIRED: 'City address is required'
+} as const
