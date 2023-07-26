@@ -31,16 +31,9 @@ export const registerAdminValidator = wrapHandler(async (req: Request, res: Resp
 export const isAdminValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const role = req.decodedAccessToken?.role as Role
 
-  if (role === Role.User) {
+  if (role !== Role.Admin) {
     throw new ErrorWithStatus({
       message: ADMIN_MESSAGES.ROLE_MUST_BE_ADMIN,
-      status: HTTP_STATUS.BAD_REQUEST
-    })
-  }
-
-  if (role === Role.Banned) {
-    throw new ErrorWithStatus({
-      message: ADMIN_MESSAGES.ACCOUNT_IS_BANNED,
       status: HTTP_STATUS.BAD_REQUEST
     })
   }

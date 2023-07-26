@@ -28,7 +28,7 @@ const isUserLogic = async (req: Request, res: Response, next: NextFunction) => {
   const role = req.decodedAccessToken?.role as Role
   if (role !== Role.Admin && role !== Role.User) {
     throw new ErrorWithStatus({
-      message: USER_MESSAGES.ACCOUNT_IS_BANNED,
+      message: USER_MESSAGES.ACCOUNT_IS_BANNED_OR_NOT_IS_USER,
       status: HTTP_STATUS.BAD_REQUEST
     })
   }
@@ -82,5 +82,15 @@ export const publicUserValidator = wrapHandler(async (req: Request, res: Respons
   if (req.header('Authorization')) {
     await accessTokenLogic(req, res, next)
     await isUserLogic(req, res, next)
+  }
+})
+
+export const isDeliverValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const role = req.decodedAccessToken?.role as Role
+  if (role !== Role.Deliver && role !== Role.Admin) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.ACCOUNT_MUST_BE_DELIVER,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
   }
 })

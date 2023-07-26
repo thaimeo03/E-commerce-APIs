@@ -11,6 +11,8 @@ import User from '~/models/database/User'
 import { ErrorWithStatus } from '~/models/error/ErrorCustom'
 import { ORDER_MESSAGES } from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
+import { OrderStatusBody } from '~/models/interfaces/orders.interface'
+import { OrderStatus } from '~/constants/enums'
 
 const checkAddressAndPhone = async (req: Request) => {
   const { billing_address, receive_phone } = await orderOneProductSchema.validateAsync(omit(req.body, 'product_info'), {
@@ -54,4 +56,38 @@ export const orderOneProductValidator = wrapHandler(async (req: Request, res: Re
 
 export const orderManyProductsValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   await checkAddressAndPhone(req)
+})
+
+export const changeOrderStatusValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { order_id } = req.params
+  const { order_status } = req.body as OrderStatusBody
+
+  const order = await databaseService.orders.findOne({ _id: new ObjectId(order_id) })
+  if (!order) {
+    throw new ErrorWithStatus({
+      message: ORDER_MESSAGES.ORDER_NOT_FOUND,
+      status: HTTP_STATUS.NOT_FOUND
+    })
+  }
+
+  if (!order_status) {
+    throw new ErrorWithStatus({
+      message: ORDER_MESSAGES.ORDER_STATUS_IS_REQUIRED,
+      status: HTTP_STATUS.UNPROCESSABLE_ENTITY
+    })
+  }
+
+  if (!Object.values(OrderStatus).includes(order_status)) {
+    throw new ErrorWithStatus({
+      message: ORDER_MESSAGES.INVALID_ORDER,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+
+  if (order_status === OrderStatus.Cancelled) {
+    throw new ErrorWithStatus({
+      message: ORDER_MESSAGES.DELIVER_CAN_NOT_BE_CANCELLED,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
 })

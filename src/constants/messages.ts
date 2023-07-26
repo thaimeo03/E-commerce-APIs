@@ -18,7 +18,8 @@ export const USER_MESSAGES = {
   REFRESH_TOKEN_NOT_FOUND: 'Refresh token not found',
   LOGOUT_SUCCESSFULLY: 'Logout successfully',
   REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token successfully',
-  ACCOUNT_IS_BANNED: 'Account is banned'
+  ACCOUNT_IS_BANNED_OR_NOT_IS_USER: 'Account is banned or you are not is user',
+  ACCOUNT_MUST_BE_DELIVER: 'Account must be deliver'
 } as const
 
 export const ADMIN_MESSAGES = {
@@ -85,5 +86,10 @@ export const ORDER_MESSAGES = {
   ORDER_PRODUCTS_SUCCESSFULLY: 'Order products successfully',
   CART_MUST_HAVE_AT_LEAST_ONE_PRODUCT: 'Cart must have at least one product',
   STREET_ADDRESS_IS_REQUIRED: 'Street address is required',
-  CITY_ADDRESS_IS_REQUIRED: 'City address is required'
+  CITY_ADDRESS_IS_REQUIRED: 'City address is required',
+  ORDER_STATUS_IS_REQUIRED: 'Order status is required',
+  DELIVER_CAN_NOT_BE_CANCELLED: 'Deliver can not be cancelled',
+  INVALID_ORDER: 'Invalid order',
+  ORDER_NOT_FOUND: 'Order not found',
+  CHANGE_ORDER_STATUS_SUCCESSFULLY: 'Change order status successfully'
 } as const

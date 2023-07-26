@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ORDER_MESSAGES } from '~/constants/messages'
-import { OrderBody } from '~/models/interfaces/orders.interface'
+import { OrderBody, OrderStatusBody } from '~/models/interfaces/orders.interface'
 import orderService from '~/services/orders.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -29,5 +29,16 @@ export const orderManyProductsController = wrapHandler(async (req: Request, res:
     result: {
       code_bills: result
     }
+  })
+})
+
+export const changeOrderStatusController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { order_id } = req.params
+  const { order_status } = req.body as OrderStatusBody
+
+  await orderService.changeOrderStatus({ order_id, order_status })
+
+  return res.json({
+    message: ORDER_MESSAGES.CHANGE_ORDER_STATUS_SUCCESSFULLY
   })
 })

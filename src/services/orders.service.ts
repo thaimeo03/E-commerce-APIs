@@ -6,6 +6,7 @@ import { ErrorWithStatus } from '~/models/error/ErrorCustom'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ORDER_MESSAGES } from '~/constants/messages'
 import { Address } from '~/models/interfaces/users.interface'
+import { OrderStatus } from '~/constants/enums'
 
 class OrderService {
   async orderOneProduct({ user_id, payload }: { user_id: string; payload: OrderBody }) {
@@ -52,6 +53,13 @@ class OrderService {
     )
 
     return orders
+  }
+
+  async changeOrderStatus({ order_id, order_status }: { order_id: string; order_status: OrderStatus }) {
+    await databaseService.orders.updateOne(
+      { _id: new ObjectId(order_id) },
+      { $set: { order_status }, $currentDate: { updated_at: true } }
+    )
   }
 }
 

@@ -19,3 +19,7 @@ export interface OrderBody {
   billing_address: Address
   receive_phone: string
 }
+
+export interface OrderStatusBody {
+  order_status: OrderStatus
+}
