@@ -91,5 +91,13 @@ export const ORDER_MESSAGES = {
   DELIVER_CAN_NOT_BE_CANCELLED: 'Deliver can not be cancelled',
   INVALID_ORDER: 'Invalid order',
   ORDER_NOT_FOUND: 'Order not found',
-  CHANGE_ORDER_STATUS_SUCCESSFULLY: 'Change order status successfully'
+  CHANGE_ORDER_STATUS_SUCCESSFULLY: 'Change order status successfully',
+  ORDER_NOT_COMPLETED: 'Order must be delivered for you successfully'
+} as const
+
+export const RATING_MESSAGES = {
+  CREATE_RATING_SUCCESSFULLY: 'Create rating successfully',
+  RATING_IS_REQUIRED: 'Rating is required',
+  RATING_MIN: 'Rating must be at least 1',
+  RATING_MAX: 'Rating must be at most 5'
 } as const

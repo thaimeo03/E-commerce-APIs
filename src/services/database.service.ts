@@ -6,6 +6,7 @@ import Category from '~/models/database/Category'
 import Product from '~/models/database/Product'
 import Cart from '~/models/database/Cart'
 import Order from '~/models/database/Order'
+import Rating from '~/models/database/Rating'
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@e-commerce.relh9wj.mongodb.net/?retryWrites=true&w=majority`
 
@@ -51,6 +52,10 @@ class DatabaseService {
 
   get orders(): Collection<Order> {
     return this.db.collection(process.env.DB_ORDERS_COLLECTION as string)
+  }
+
+  get ratings(): Collection<Rating> {
+    return this.db.collection(process.env.DB_RATINGS_COLLECTION as string)
   }
 }
 

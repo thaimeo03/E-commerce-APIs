@@ -28,7 +28,8 @@ export const addProductValidator = wrapHandler(async (req: Request, res: Respons
 })
 
 export const idProductValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const { product_id } = req.params
+  const { product_id } = req.params.product_id === undefined ? req.body : req.params
+
   const product = await databaseService.products.findOne({ _id: new ObjectId(product_id) })
   if (!product) {
     throw new ErrorWithStatus({

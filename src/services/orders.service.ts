@@ -10,7 +10,14 @@ import { OrderStatus } from '~/constants/enums'
 
 class OrderService {
   async orderOneProduct({ user_id, payload }: { user_id: string; payload: OrderBody }) {
-    const order = await databaseService.orders.insertOne(new Order({ user_id: new ObjectId(user_id), ...payload }))
+    payload.product_info.product_id = new ObjectId(payload.product_info.product_id)
+    payload.product_info.color = payload.product_info.color || ''
+    const order = await databaseService.orders.insertOne(
+      new Order({
+        user_id: new ObjectId(user_id),
+        ...payload
+      })
+    )
 
     return order.insertedId
   }
