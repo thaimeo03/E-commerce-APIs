@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { ProductInfo } from './carts.interface'
+import { ItemCartBody, ProductInfo } from './carts.interface'
 import { OrderStatus } from '~/constants/enums'
 import { Address } from './users.interface'
 
@@ -15,7 +15,7 @@ export interface OrderConstructor {
 }
 
 export interface OrderBody {
-  product_info: ProductInfo
+  product_info: ItemCartBody
   billing_address: Address
   receive_phone: string
 }
