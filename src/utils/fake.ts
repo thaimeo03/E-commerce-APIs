@@ -12,8 +12,8 @@ const createRandomProduct = () => {
     images: [faker.image.url(), faker.image.url()],
     description: faker.lorem.paragraph({ min: 20, max: 160 }),
     price: {
-      promotion: 0,
-      regular: Number.parseFloat(faker.commerce.price({ min: 20, max: 200 }))
+      promotion: Number.parseFloat(faker.commerce.price({ min: 0, max: 50 })),
+      regular: Number.parseFloat(faker.commerce.price({ min: 50, max: 200 }))
     },
     sold: faker.number.int({ min: 50, max: 2000 }),
     colors: [faker.color.human(), faker.color.human()],
