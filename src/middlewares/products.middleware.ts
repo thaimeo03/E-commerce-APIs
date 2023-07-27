@@ -42,7 +42,7 @@ export const idProductValidator = wrapHandler(async (req: Request, res: Response
 })
 
 export const getProductsValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const { category_id, page, limit, order, sort_by } = req.query as ProductQueries
+  const { category_id, page, limit, order, sort_by, price_min, price_max, rating } = req.query as ProductQueries
 
   if (category_id) {
     if (!ObjectId.isValid(category_id)) {
@@ -94,6 +94,45 @@ export const getProductsValidator = wrapHandler(async (req: Request, res: Respon
     if (sort_by !== 'created_at' && sort_by !== 'sold' && sort_by !== 'price') {
       throw new ErrorWithStatus({
         message: PRODUCT_MESSAGES.INVALID_SORT_BY,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
+  }
+
+  if (price_min) {
+    const num = Number(price_min)
+    if (num < 0) {
+      throw new ErrorWithStatus({
+        message: PRODUCT_MESSAGES.INVALID_PRICE_MIN,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
+  }
+
+  if (price_max) {
+    const num = Number(price_max)
+    if (num < 0) {
+      throw new ErrorWithStatus({
+        message: PRODUCT_MESSAGES.INVALID_PRICE_MAX,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
+  }
+
+  if (price_min && price_max) {
+    if (price_min > price_max) {
+      throw new ErrorWithStatus({
+        message: PRODUCT_MESSAGES.PRICE_MIN_MUST_BE_LESS_THAN_PRICE_MAX,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
+  }
+
+  if (rating) {
+    const num = Number(rating)
+    if (num < 0 || num > 5) {
+      throw new ErrorWithStatus({
+        message: PRODUCT_MESSAGES.INVALID_RATING,
         status: HTTP_STATUS.BAD_REQUEST
       })
     }

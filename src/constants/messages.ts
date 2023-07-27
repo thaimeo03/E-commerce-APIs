@@ -58,7 +58,11 @@ export const PRODUCT_MESSAGES = {
   INVALID_PAGE: 'page size must be greater than 0',
   INVALID_LIMIT: 'limit must be greater than 0 and less than 100',
   INVALID_ORDER: 'order must be asc or desc',
-  INVALID_SORT_BY: 'sort_by must be created_at or sold or price'
+  INVALID_SORT_BY: 'sort_by must be created_at or sold or price',
+  INVALID_PRICE_MIN: 'price_min must be greater than 0',
+  INVALID_PRICE_MAX: 'price_max must be greater than 0',
+  PRICE_MIN_MUST_BE_LESS_THAN_PRICE_MAX: 'price_min must be less than price_max',
+  INVALID_RATING: 'rating must be greater than 0 and less than 5'
 }
 
 export const MEDIAS_MESSAGES = {

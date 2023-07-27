@@ -49,9 +49,18 @@ export const updateProductController = wrapHandler(async (req: Request, res: Res
 
 export const getProductsController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const category_name = req.category?.name
-  const { name, order, sort_by, limit, page } = req.query as ProductQueries
+  const { name, order, sort_by, limit, page, price_min, price_max, rating } = req.query as ProductQueries
 
-  const result = await productService.getProducts(category_name, { name, order, sort_by, limit, page })
+  const result = await productService.getProducts(category_name, {
+    name,
+    order,
+    sort_by,
+    limit,
+    page,
+    price_min,
+    price_max,
+    rating
+  })
 
   return res.json({
     message: PRODUCT_MESSAGES.GET_PRODUCTS_SUCCESSFULLY,

@@ -39,7 +39,9 @@ export interface ProductQueries {
   limit?: string
   order?: 'desc' | 'asc'
   sort_by?: 'created_at' | 'sold' | 'price'
-  // rating?: number
+  rating?: string
   name?: string
   category_id?: string
+  price_min?: string
+  price_max?: string
 }

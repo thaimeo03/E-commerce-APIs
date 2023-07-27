@@ -57,7 +57,7 @@ productRouter.put(
 
 // Get products
 // Header: access_token
-// Query: category_id, page, limit, order: 'desc' || 'asc' (default: desc), sort_by: 'created_at' || 'sold' || 'price' (default: created_at), rating (>= rating), name **** Miss rating and price range
+// Query: category_id, page, limit, order: 'desc' || 'asc' (default: desc), sort_by: 'created_at' || 'sold' || 'price' (default: created_at), rating (>= rating), name, price_min, price_max
 productRouter.get('/', publicUserValidator, getProductsValidator, getProductsController) // miss productQueryValidator
 
 export default productRouter

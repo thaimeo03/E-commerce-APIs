@@ -75,9 +75,12 @@ class ProductService {
     return result.value as WithId<Product>
   }
 
-  async getProducts(category_name: string | undefined, { name, order, sort_by, limit, page }: ProductQueries) {
+  async getProducts(
+    category_name: string | undefined,
+    { name, order, sort_by, limit, page, price_min, price_max, rating }: ProductQueries
+  ) {
     const categories_query = category_name ? { categories: category_name } : undefined
-    const name_query = name ? { name: { $regex: name.replace(/-/g, ' ') } } : undefined
+    const name_query = name ? { $text: { $search: encodeURIComponent(name) } } : undefined
     const order_query = order === 'asc' ? 1 : -1 // default -1
     const sort_key = sort_by === 'price' ? 'price.regular' : sort_by || 'created_at'
     const sort_query = {
@@ -85,6 +88,24 @@ class ProductService {
     }
     const page_query = Number(page) || 1
     const limit_query = Number(limit) || 20
+    const price_min_query = price_min ? { $gte: Number(price_min) } : undefined
+    const price_max_query = price_max ? { $lte: Number(price_max) } : undefined
+    const price_range_query =
+      price_min || price_max
+        ? {
+            'price.regular': {
+              ...price_min_query,
+              ...price_max_query
+            }
+          }
+        : undefined
+    const rating_query = rating
+      ? {
+          average_rating: {
+            $gte: Number(rating)
+          }
+        }
+      : undefined
 
     const [products, total] = await Promise.all([
       await databaseService.products
@@ -92,7 +113,76 @@ class ProductService {
           {
             $match: {
               ...categories_query,
-              ...name_query
+              ...name_query,
+              ...price_range_query
+            }
+          },
+          {
+            $sort: sort_query
+          },
+          {
+            $project: {
+              colors: 0,
+              status: 0,
+              // quantity: 0,
+              categories: 0,
+              updated_at: 0,
+              images: 0
+            }
+          },
+          {
+            $lookup: {
+              from: 'ratings',
+              localField: '_id',
+              foreignField: 'product_id',
+              as: 'ratings'
+            }
+          },
+          {
+            $unwind: {
+              path: '$ratings',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $group: {
+              _id: '$_id',
+              name: {
+                $first: '$name'
+              },
+              main_image: {
+                $first: '$main_image'
+              },
+              description: {
+                $first: '$description'
+              },
+              price: {
+                $first: '$price'
+              },
+              sold: {
+                $first: '$sold'
+              },
+              quantity: {
+                $first: '$quantity'
+              },
+              average_rating: {
+                $avg: '$ratings.rating'
+              },
+              created_at: {
+                $first: '$created_at'
+              }
+            }
+          },
+          {
+            $addFields: {
+              average_rating: {
+                $ifNull: ['$average_rating', 0]
+              }
+            }
+          },
+          {
+            $match: {
+              ...rating_query
             }
           },
           {
@@ -102,23 +192,16 @@ class ProductService {
             $limit: limit_query
           },
           {
-            $sort: sort_query
-          },
-          {
-            $project: {
-              description: 0,
-              colors: 0,
-              status: 0,
-              quantity: 0,
-              categories: 0,
-              updated_at: 0
+            $sort: {
+              created_at: -1
             }
           }
         ])
         .toArray(),
       await databaseService.products.countDocuments({
         ...categories_query,
-        ...name_query
+        ...name_query,
+        ...price_range_query
       })
     ])
 
