@@ -76,11 +76,11 @@ class OrderService {
         { _id: new ObjectId(order_id) },
         { $set: { order_status }, $currentDate: { updated_at: true } }
       )
+
       const sold = await databaseService.orders.countDocuments({
         order_status: OrderStatus.Completed,
         'product_info.product_id': order.product_info.product_id
       })
-
       await databaseService.products.updateOne(
         {
           _id: order.product_info.product_id
@@ -99,6 +99,11 @@ class OrderService {
         message: ORDER_MESSAGES.CHANGE_ORDER_STATUS_FAILED,
         status: HTTP_STATUS.BAD_REQUEST
       })
+    } else if (order.order_status !== OrderStatus.Completed && order_status !== OrderStatus.Completed) {
+      await databaseService.orders.updateOne(
+        { _id: new ObjectId(order_id) },
+        { $set: { order_status }, $currentDate: { updated_at: true } }
+      )
     }
   }
 }
