@@ -23,6 +23,28 @@ class RatingService {
       }
     )
 
+    const ratings = await databaseService.ratings
+      .find({
+        product_id: new ObjectId(payload.product_id)
+      })
+      .toArray()
+
+    const average_rating = ratings.reduce((a, b) => a + b.rating, 0) / ratings.length
+
+    await databaseService.products.updateOne(
+      {
+        _id: new ObjectId(payload.product_id)
+      },
+      {
+        $set: {
+          average_rating
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+
     return rating.value
   }
 }

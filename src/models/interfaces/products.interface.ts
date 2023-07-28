@@ -17,6 +17,7 @@ export interface ProductConstructor {
   quantity: number // có sẵn
   status?: Status
   sold?: number
+  average_rating?: number
   categories: string[] // chứa tên các loại sản phẩm nhau
   created_at?: Date
   updated_at?: Date

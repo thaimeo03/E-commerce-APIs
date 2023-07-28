@@ -108,17 +108,15 @@ class ProductService {
       : undefined
 
     const [products, total] = await Promise.all([
-      await databaseService.products
+      databaseService.products
         .aggregate([
           {
             $match: {
               ...categories_query,
               ...name_query,
-              ...price_range_query
+              ...price_range_query,
+              ...rating_query
             }
-          },
-          {
-            $sort: sort_query
           },
           {
             $project: {
@@ -127,62 +125,8 @@ class ProductService {
               // quantity: 0,
               categories: 0,
               updated_at: 0,
-              images: 0
-            }
-          },
-          {
-            $lookup: {
-              from: 'ratings',
-              localField: '_id',
-              foreignField: 'product_id',
-              as: 'ratings'
-            }
-          },
-          {
-            $unwind: {
-              path: '$ratings',
-              preserveNullAndEmptyArrays: true
-            }
-          },
-          {
-            $group: {
-              _id: '$_id',
-              name: {
-                $first: '$name'
-              },
-              main_image: {
-                $first: '$main_image'
-              },
-              description: {
-                $first: '$description'
-              },
-              price: {
-                $first: '$price'
-              },
-              sold: {
-                $first: '$sold'
-              },
-              quantity: {
-                $first: '$quantity'
-              },
-              average_rating: {
-                $avg: '$ratings.rating'
-              },
-              created_at: {
-                $first: '$created_at'
-              }
-            }
-          },
-          {
-            $addFields: {
-              average_rating: {
-                $ifNull: ['$average_rating', 0]
-              }
-            }
-          },
-          {
-            $match: {
-              ...rating_query
+              images: 0,
+              ratings: 0
             }
           },
           {
@@ -192,16 +136,15 @@ class ProductService {
             $limit: limit_query
           },
           {
-            $sort: {
-              created_at: -1
-            }
+            $sort: sort_query
           }
         ])
         .toArray(),
-      await databaseService.products.countDocuments({
+      databaseService.products.countDocuments({
         ...categories_query,
         ...name_query,
-        ...price_range_query
+        ...price_range_query,
+        ...rating_query
       })
     ])
 

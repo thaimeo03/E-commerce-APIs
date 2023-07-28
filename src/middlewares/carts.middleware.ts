@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ObjectId } from 'mongodb'
+import { Status } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { CART_MESSAGES, PRODUCT_MESSAGES } from '~/constants/messages'
 import { ErrorWithStatus } from '~/models/error/ErrorCustom'
@@ -23,6 +24,13 @@ export const checkProductInfo = async (value: ItemCartBody) => {
     throw new ErrorWithStatus({
       message: CART_MESSAGES.QUANTITY_LIMIT,
       status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+
+  if (product.status === Status.OutStock) {
+    throw new ErrorWithStatus({
+      message: CART_MESSAGES.OUT_OF_STOCK,
+      status: HTTP_STATUS.NOT_FOUND
     })
   }
 

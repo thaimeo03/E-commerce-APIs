@@ -77,7 +77,8 @@ export const CART_MESSAGES = {
   PRODUCT_NOT_FOUND_OR_OUT_OF_STOCK: 'Product not found or out of stock',
   ADD_TO_CART_SUCCESSFULLY: 'Add product to cart successfully',
   PRODUCT_ALREADY_ADDED: 'Product already added',
-  REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully'
+  REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully',
+  OUT_OF_STOCK: 'Out of stock'
 } as const
 
 export const ORDER_MESSAGES = {
@@ -102,6 +103,7 @@ export const ORDER_MESSAGES = {
 export const RATING_MESSAGES = {
   CREATE_RATING_SUCCESSFULLY: 'Create rating successfully',
   RATING_IS_REQUIRED: 'Rating is required',
+  RATING_IS_INTEGER: 'Rating must be an integer',
   RATING_MIN: 'Rating must be at least 1',
   RATING_MAX: 'Rating must be at most 5'
 } as const

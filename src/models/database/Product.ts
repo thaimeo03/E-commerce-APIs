@@ -13,6 +13,7 @@ export default class Product {
   quantity: number // có sẵn
   status: Status
   sold: number
+  average_rating: number
   categories: string[] // chứa tên các loại sản phẩm nhau
   created_at: Date
   updated_at: Date
@@ -29,6 +30,7 @@ export default class Product {
     this.quantity = product.quantity
     this.status = product.status || Status.InStock
     this.sold = product.sold || 0
+    this.average_rating = 0
     this.categories = product.categories
     this.created_at = product.created_at || date
     this.updated_at = product.updated_at || date
