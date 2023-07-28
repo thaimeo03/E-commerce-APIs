@@ -97,7 +97,8 @@ export const ORDER_MESSAGES = {
   INVALID_ORDER: 'Invalid order',
   ORDER_NOT_FOUND: 'Order not found',
   CHANGE_ORDER_STATUS_SUCCESSFULLY: 'Change order status successfully',
-  ORDER_NOT_COMPLETED: 'Order must be delivered for you successfully'
+  ORDER_NOT_COMPLETED: 'Order must be delivered for you successfully',
+  CHANGE_ORDER_STATUS_FAILED: 'Change order status failed'
 } as const
 
 export const RATING_MESSAGES = {

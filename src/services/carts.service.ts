@@ -10,6 +10,19 @@ class CartService {
   async addToCart({ user_id, payload }: { user_id: string; payload: ItemCartBody }) {
     const cart = await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })
 
+    if (cart) {
+      // Check if product already added
+      const isExistedProductInCart = (cart as WithId<Cart>).products_added.some(
+        (product) => product.product_id.toString() === payload.product_id
+      )
+      if (isExistedProductInCart) {
+        throw new ErrorWithStatus({
+          message: CART_MESSAGES.PRODUCT_ALREADY_ADDED,
+          status: HTTP_STATUS.OK
+        })
+      }
+    }
+
     // Check if cart exist
     if (!cart) {
       await databaseService.carts.insertOne(
@@ -18,17 +31,6 @@ class CartService {
           products_added: []
         })
       )
-    }
-
-    // Check if product already added
-    const isExistedProductInCart = (cart as WithId<Cart>).products_added.some(
-      (product) => product.product_id.toString() === payload.product_id
-    )
-    if (isExistedProductInCart) {
-      throw new ErrorWithStatus({
-        message: CART_MESSAGES.PRODUCT_ALREADY_ADDED,
-        status: HTTP_STATUS.OK
-      })
     }
 
     // Add product

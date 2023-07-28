@@ -29,7 +29,7 @@ export default class Product {
     this.colors = product.colors || []
     this.quantity = product.quantity
     this.status = product.status || Status.InStock
-    this.sold = product.sold || 0
+    this.sold = 0
     this.average_rating = 0
     this.categories = product.categories
     this.created_at = product.created_at || date

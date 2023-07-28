@@ -1,7 +1,7 @@
 import { OrderBody } from '~/models/interfaces/orders.interface'
 import databaseService from './database.service'
 import Order from '~/models/database/Order'
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 import { ErrorWithStatus } from '~/models/error/ErrorCustom'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ORDER_MESSAGES } from '~/constants/messages'
@@ -69,10 +69,37 @@ class OrderService {
   }
 
   async changeOrderStatus({ order_id, order_status }: { order_id: string; order_status: OrderStatus }) {
-    await databaseService.orders.updateOne(
-      { _id: new ObjectId(order_id) },
-      { $set: { order_status }, $currentDate: { updated_at: true } }
-    )
+    const order = (await databaseService.orders.findOne({ _id: new ObjectId(order_id) })) as WithId<Order>
+
+    if (order.order_status !== OrderStatus.Completed && order_status === OrderStatus.Completed) {
+      await databaseService.orders.updateOne(
+        { _id: new ObjectId(order_id) },
+        { $set: { order_status }, $currentDate: { updated_at: true } }
+      )
+      const sold = await databaseService.orders.countDocuments({
+        order_status: OrderStatus.Completed,
+        'product_info.product_id': order.product_info.product_id
+      })
+
+      await databaseService.products.updateOne(
+        {
+          _id: order.product_info.product_id
+        },
+        {
+          $set: {
+            sold
+          },
+          $inc: {
+            quantity: -1
+          }
+        }
+      )
+    } else if (order.order_status === OrderStatus.Completed && order_status !== OrderStatus.Completed) {
+      throw new ErrorWithStatus({
+        message: ORDER_MESSAGES.CHANGE_ORDER_STATUS_FAILED,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
   }
 }
 
