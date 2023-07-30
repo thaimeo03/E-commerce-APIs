@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { ErrorValidator, ErrorWithStatus } from '~/models/error/ErrorCustom'
+import { ErrorValidator, ErrorWithStatus } from '~/models/res/ErrorCustom'
 
 const errorHandler = (
   err: ErrorWithStatus | Error | ErrorValidator,

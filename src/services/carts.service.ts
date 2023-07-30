@@ -2,7 +2,7 @@ import { ItemCartBody } from '~/models/interfaces/carts.interface'
 import databaseService from './database.service'
 import Cart from '~/models/database/Cart'
 import { ObjectId, WithId } from 'mongodb'
-import { ErrorWithStatus } from '~/models/error/ErrorCustom'
+import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import { CART_MESSAGES } from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
 

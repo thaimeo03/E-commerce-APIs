@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ObjectId } from 'mongodb'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { CATEGORY_MESSAGES, PRODUCT_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/error/ErrorCustom'
+import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import { ProductBody, ProductQueries } from '~/models/interfaces/products.interface'
 import { addProductSchema } from '~/models/schemas/products.schema'
 import databaseService from '~/services/database.service'
@@ -41,25 +41,8 @@ export const idProductValidator = wrapHandler(async (req: Request, res: Response
   req.product = product
 })
 
-export const getProductsValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const { category_id, page, limit, order, sort_by, price_min, price_max, rating } = req.query as ProductQueries
-
-  if (category_id) {
-    if (!ObjectId.isValid(category_id)) {
-      throw new ErrorWithStatus({
-        message: CATEGORY_MESSAGES.CATEGORY_NOT_FOUND,
-        status: HTTP_STATUS.NOT_FOUND
-      })
-    }
-    const category = await databaseService.categories.findOne({ _id: new ObjectId(category_id) })
-    if (!category) {
-      throw new ErrorWithStatus({
-        message: CATEGORY_MESSAGES.CATEGORY_NOT_FOUND,
-        status: HTTP_STATUS.NOT_FOUND
-      })
-    }
-    req.category = category
-  }
+export const paginationValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { page, limit } = req.query as ProductQueries
 
   if (page) {
     const num = Number(page)
@@ -79,6 +62,27 @@ export const getProductsValidator = wrapHandler(async (req: Request, res: Respon
         status: HTTP_STATUS.BAD_REQUEST
       })
     }
+  }
+})
+
+export const getProductsValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { category_id, order, sort_by, price_min, price_max, rating } = req.query as ProductQueries
+
+  if (category_id) {
+    if (!ObjectId.isValid(category_id)) {
+      throw new ErrorWithStatus({
+        message: CATEGORY_MESSAGES.CATEGORY_NOT_FOUND,
+        status: HTTP_STATUS.NOT_FOUND
+      })
+    }
+    const category = await databaseService.categories.findOne({ _id: new ObjectId(category_id) })
+    if (!category) {
+      throw new ErrorWithStatus({
+        message: CATEGORY_MESSAGES.CATEGORY_NOT_FOUND,
+        status: HTTP_STATUS.NOT_FOUND
+      })
+    }
+    req.category = category
   }
 
   if (order) {

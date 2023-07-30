@@ -3,9 +3,9 @@ import { omit } from 'lodash'
 import { ObjectId } from 'mongodb'
 import { OrderStatus } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { ORDER_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/error/ErrorCustom'
-import { RatingBody } from '~/models/interfaces/ratings.interface'
+import { ORDER_MESSAGES, PRODUCT_MESSAGES } from '~/constants/messages'
+import { ErrorWithStatus } from '~/models/res/ErrorCustom'
+import { RatingBody, RatingQueries } from '~/models/interfaces/ratings.interface'
 import { createRatingSchema } from '~/models/schemas/ratings.schema'
 import databaseService from '~/services/database.service'
 import { wrapHandler } from '~/utils/wrapHandler'
@@ -32,5 +32,19 @@ export const createRatingValidator = wrapHandler(async (req: Request, res: Respo
       message: ORDER_MESSAGES.ORDER_NOT_COMPLETED,
       status: HTTP_STATUS.BAD_REQUEST
     })
+  }
+})
+
+export const getRatingsByProductIdValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { order } = req.query as RatingQueries
+  if (order) {
+    if (order) {
+      if (order !== 'asc' && order !== 'desc') {
+        throw new ErrorWithStatus({
+          message: PRODUCT_MESSAGES.INVALID_ORDER,
+          status: HTTP_STATUS.BAD_REQUEST
+        })
+      }
+    }
   }
 })

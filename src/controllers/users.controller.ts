@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { Role } from '~/constants/enums'
 import { USER_MESSAGES } from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/error/ErrorCustom'
+import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import userService from '~/services/users.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 

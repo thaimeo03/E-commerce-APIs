@@ -107,5 +107,6 @@ export const RATING_MESSAGES = {
   RATING_IS_REQUIRED: 'Rating is required',
   RATING_IS_INTEGER: 'Rating must be an integer',
   RATING_MIN: 'Rating must be at least 1',
-  RATING_MAX: 'Rating must be at most 5'
+  RATING_MAX: 'Rating must be at most 5',
+  GET_RATINGS_SUCCESSFULLY: 'Get ratings successfully'
 } as const

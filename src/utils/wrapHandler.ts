@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
-import { ErrorValidator } from '~/models/error/ErrorCustom'
+import { ErrorValidator } from '~/models/res/ErrorCustom'
 
 export const wrapHandler = (func: any) => {
   return async (req: Request, res: Response, next: NextFunction) => {

@@ -14,3 +14,9 @@ export interface RatingBody {
   rating: number // 1 -> 5
   comment?: string
 }
+
+export interface RatingQueries {
+  page?: string
+  limit?: string
+  order?: string
+}
