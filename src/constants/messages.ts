@@ -62,7 +62,8 @@ export const PRODUCT_MESSAGES = {
   INVALID_PRICE_MIN: 'price_min must be greater than 0',
   INVALID_PRICE_MAX: 'price_max must be greater than 0',
   PRICE_MIN_MUST_BE_LESS_THAN_PRICE_MAX: 'price_min must be less than price_max',
-  INVALID_RATING: 'rating must be greater than 0 and less than 5'
+  INVALID_RATING: 'rating must be greater than 0 and less than 5',
+  GET_PRODUCT_DETAIL_SUCCESSFULLY: 'Get product detail successfully'
 }
 
 export const MEDIAS_MESSAGES = {

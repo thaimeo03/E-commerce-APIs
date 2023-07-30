@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { PRODUCT_MESSAGES } from '~/constants/messages'
 import Product from '~/models/database/Product'
 import { ProductBody, ProductQueries } from '~/models/interfaces/products.interface'
+import databaseService from '~/services/database.service'
 import productService from '~/services/products.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -65,5 +66,29 @@ export const getProductsController = wrapHandler(async (req: Request, res: Respo
   return res.json({
     message: PRODUCT_MESSAGES.GET_PRODUCTS_SUCCESSFULLY,
     result
+  })
+})
+
+export const getProductDetailController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const product = req.product as Product
+
+  const categoriesWithId = await Promise.all(
+    product.categories.map(async (name) => {
+      const categoryWithId = await databaseService.categories.findOne({
+        name: name
+      })
+      return {
+        id: categoryWithId?._id,
+        name: categoryWithId?.name
+      }
+    })
+  )
+
+  return res.json({
+    message: PRODUCT_MESSAGES.GET_PRODUCT_DETAIL_SUCCESSFULLY,
+    result: {
+      ...product,
+      categories: categoriesWithId
+    }
   })
 })
