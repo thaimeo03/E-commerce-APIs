@@ -7,22 +7,35 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { ORDER_MESSAGES } from '~/constants/messages'
 import { Address } from '~/models/interfaces/users.interface'
 import { OrderStatus } from '~/constants/enums'
+import Product from '~/models/database/Product'
 
 class OrderService {
   async orderOneProduct({ user_id, payload }: { user_id: string; payload: OrderBody }) {
-    const order = await databaseService.orders.insertOne(
-      new Order({
-        user_id: new ObjectId(user_id),
-        ...payload,
-        product_info: {
-          ...payload.product_info,
-          product_id: new ObjectId(payload.product_info.product_id),
-          color: payload.product_info.color || ''
-        }
-      })
-    )
+    const [order, product] = await Promise.all([
+      await databaseService.orders.insertOne(
+        new Order({
+          user_id: new ObjectId(user_id),
+          ...payload,
+          product_info: {
+            ...payload.product_info,
+            product_id: new ObjectId(payload.product_info.product_id),
+            color: payload.product_info.color || ''
+          }
+        })
+      ),
+      (await databaseService.products.findOne({
+        _id: new ObjectId(payload.product_info.product_id)
+      })) as WithId<Product>
+    ])
 
-    return order.insertedId
+    // Calculate total price
+    const total_price =
+      payload.product_info.quantity * (product.price.promotion !== 0 ? product.price.promotion : product.price.regular)
+
+    return {
+      order_id: order.insertedId,
+      total_price
+    }
   }
 
   async orderManyProducts({
@@ -65,7 +78,13 @@ class OrderService {
       { $set: { products_added: [] }, $currentDate: { updated_at: true } }
     )
 
-    return orders
+    // Calculate total price
+    const total_price = orders.reduce((total, order) => total + order.total_price, 0)
+
+    return {
+      orders,
+      total_price
+    }
   }
 
   async changeOrderStatus({ order_id, order_status }: { order_id: string; order_status: OrderStatus }) {
