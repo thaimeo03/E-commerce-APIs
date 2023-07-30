@@ -42,3 +42,14 @@ export const changeOrderStatusController = wrapHandler(async (req: Request, res:
     message: ORDER_MESSAGES.CHANGE_ORDER_STATUS_SUCCESSFULLY
   })
 })
+
+export const getOrderInfoController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { order_id } = req.params
+
+  const result = await orderService.getOrderInfo(order_id)
+
+  return res.json({
+    message: ORDER_MESSAGES.GET_ORDER_INFO_SUCCESSFULLY,
+    result
+  })
+})

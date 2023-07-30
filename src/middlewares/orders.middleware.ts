@@ -58,9 +58,8 @@ export const orderManyProductsValidator = wrapHandler(async (req: Request, res: 
   await checkAddressAndPhone(req)
 })
 
-export const changeOrderStatusValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const orderIdValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { order_id } = req.params
-  const { order_status } = req.body as OrderStatusBody
 
   const order = await databaseService.orders.findOne({ _id: new ObjectId(order_id) })
   if (!order) {
@@ -69,6 +68,10 @@ export const changeOrderStatusValidator = wrapHandler(async (req: Request, res: 
       status: HTTP_STATUS.NOT_FOUND
     })
   }
+})
+
+export const changeOrderStatusValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { order_status } = req.body as OrderStatusBody
 
   if (!order_status) {
     throw new ErrorWithStatus({

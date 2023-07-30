@@ -125,6 +125,87 @@ class OrderService {
       )
     }
   }
+
+  async getOrderInfo(order_id: string) {
+    const res = await databaseService.orders
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(order_id)
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'user_id',
+            foreignField: '_id',
+            as: 'user'
+          }
+        },
+        {
+          $unwind: {
+            path: '$user'
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'product_info.product_id',
+            foreignField: '_id',
+            as: 'product_info.product'
+          }
+        },
+        {
+          $unwind: {
+            path: '$product_info.product'
+          }
+        },
+        {
+          $addFields: {
+            'product_info.total_price': {
+              $multiply: [
+                '$product_info.quantity',
+                {
+                  $cond: [
+                    {
+                      $eq: ['$product_info.product.price.promotion', 0]
+                    },
+                    '$product_info.product.price.regular',
+                    '$product_info.product.price.promotion'
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          $project: {
+            user_id: 0,
+            'product_info.product_id': 0,
+            'product_info.product.quantity': 0,
+            'product_info.product.status': 0,
+            'product_info.product.sold': 0,
+            'product_info.product.average_rating': 0,
+            'product_info.product.description': 0,
+            'product_info.product.colors': 0,
+            'product_info.product.categories': 0,
+            'product_info.product.updated_at': 0,
+            'user.email': 0,
+            'user.password': 0,
+            'user.forgot_password_token': 0,
+            'user.role': 0,
+            'user.addresses': 0,
+            'user.phone': 0,
+            'user.day_of_birth': 0,
+            'user.created_at': 0,
+            'user.updated_at': 0
+          }
+        }
+      ])
+      .toArray()
+
+    return res
+  }
 }
 
 const orderService = new OrderService()

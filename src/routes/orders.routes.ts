@@ -1,15 +1,22 @@
 import { Router } from 'express'
 import {
   changeOrderStatusController,
+  getOrderInfoController,
   orderManyProductsController,
   orderOneProductController
 } from '~/controllers/orders.controller'
 import {
   changeOrderStatusValidator,
+  orderIdValidator,
   orderManyProductsValidator,
   orderOneProductValidator
 } from '~/middlewares/orders.middleware'
-import { accessTokenValidator, isDeliverValidator, isUserValidator } from '~/middlewares/users.middleware'
+import {
+  accessTokenValidator,
+  isDeliverValidator,
+  isUserValidator,
+  publicUserValidator
+} from '~/middlewares/users.middleware'
 
 const ordersRouter = Router()
 
@@ -43,8 +50,14 @@ ordersRouter.patch(
   '/status/:order_id',
   accessTokenValidator,
   isDeliverValidator,
+  orderIdValidator,
   changeOrderStatusValidator,
   changeOrderStatusController
 )
+
+// Get order information
+// Header: access_token
+// Params: order_id
+ordersRouter.get('/:order_id', publicUserValidator, orderIdValidator, getOrderInfoController)
 
 export default ordersRouter
