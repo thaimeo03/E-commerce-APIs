@@ -11,6 +11,7 @@ import productRouter from './routes/products.routes'
 import cartsRouter from './routes/cart.routes'
 import ordersRouter from './routes/orders.routes'
 import ratingsRouter from './routes/ratings.routes'
+import analyticsRouter from './routes/analytics.routes'
 
 const app = express()
 const HOSTNAME = 'localhost'
@@ -28,6 +29,7 @@ app.use('/medias', mediasRouter)
 app.use('/carts', cartsRouter)
 app.use('/orders', ordersRouter)
 app.use('/ratings', ratingsRouter)
+app.use('/analytics', analyticsRouter)
 app.use('/static/image', express.static(UPLOAD_IMAGE_DIR))
 //
 

@@ -111,3 +111,10 @@ export const RATING_MESSAGES = {
   RATING_MAX: 'Rating must be at most 5',
   GET_RATINGS_SUCCESSFULLY: 'Get ratings successfully'
 } as const
+
+export const ANALYTIC_MESSAGES = {
+  INVALID_DAY: 'Invalid day',
+  INVALID_MONTH: 'Invalid month',
+  INVALID_YEAR: 'Invalid year',
+  GET_ANALYTICS_OVERVIEW_SUCCESSFULLY: 'Get analytics overview successfully'
+} as const
