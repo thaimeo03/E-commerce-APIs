@@ -1,5 +1,6 @@
-import { DateQuery } from '~/models/interfaces/analytics.interface'
+import { DateQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
 import databaseService from './database.service'
+import { ObjectId } from 'mongodb'
 
 class AnalyticService {
   async getAnalytics({ day, month, year }: DateQuery) {
@@ -99,6 +100,204 @@ class AnalyticService {
       .toArray()
 
     return result
+  }
+
+  async transaction({ order_id, order_status, email, page, limit }: TransactionQuery) {
+    const page_query = Number(page) || 1
+    const limit_query = Number(limit) || 10
+    const order_id_query = order_id ? { _id: new ObjectId(order_id) } : undefined
+    const email_query = email ? { 'user.email': email } : undefined
+    const order_status_query = order_status ? { order_status: Number(order_status) } : undefined
+
+    const [transaction, total] = await Promise.all([
+      await databaseService.orders
+        .aggregate([
+          {
+            $match: {
+              ...order_id_query,
+              ...order_status_query
+            }
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user_id',
+              foreignField: '_id',
+              as: 'user'
+            }
+          },
+          {
+            $unwind: {
+              path: '$user'
+            }
+          },
+          {
+            $lookup: {
+              from: 'products',
+              localField: 'product_info.product_id',
+              foreignField: '_id',
+              as: 'product_info.product'
+            }
+          },
+          {
+            $unwind: {
+              path: '$product_info.product'
+            }
+          },
+          {
+            $addFields: {
+              'product_info.total_price': {
+                $multiply: [
+                  '$product_info.quantity',
+                  {
+                    $cond: [
+                      {
+                        $eq: ['$product_info.product.price.promotion', 0]
+                      },
+                      1,
+                      '$product_info.product.price.promotion'
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            $project: {
+              user_id: 0,
+              'product_info.product_id': 0,
+              'product_info.product.quantity': 0,
+              'product_info.product.images': 0,
+              'product_info.product.price': 0,
+              'product_info.product.created_at': 0,
+              'product_info.product.status': 0,
+              'product_info.product.sold': 0,
+              'product_info.product.average_rating': 0,
+              'product_info.product.description': 0,
+              'product_info.product.colors': 0,
+              'product_info.product.categories': 0,
+              'product_info.product.updated_at': 0,
+              'user.password': 0,
+              'user.forgot_password_token': 0,
+              'user.role': 0,
+              'user.addresses': 0,
+              'user.phone': 0,
+              'user.day_of_birth': 0,
+              'user.created_at': 0,
+              'user.updated_at': 0
+            }
+          },
+          {
+            $match: {
+              ...email_query
+            }
+          },
+          {
+            $skip: (page_query - 1) * limit_query
+          },
+          {
+            $limit: limit_query
+          }
+        ])
+        .toArray(),
+      await databaseService.orders
+        .aggregate([
+          {
+            $match: {
+              ...order_id_query,
+              ...order_status_query
+            }
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user_id',
+              foreignField: '_id',
+              as: 'user'
+            }
+          },
+          {
+            $unwind: {
+              path: '$user'
+            }
+          },
+          {
+            $lookup: {
+              from: 'products',
+              localField: 'product_info.product_id',
+              foreignField: '_id',
+              as: 'product_info.product'
+            }
+          },
+          {
+            $unwind: {
+              path: '$product_info.product'
+            }
+          },
+          {
+            $addFields: {
+              'product_info.total_price': {
+                $multiply: [
+                  '$product_info.quantity',
+                  {
+                    $cond: [
+                      {
+                        $eq: ['$product_info.product.price.promotion', 0]
+                      },
+                      1,
+                      '$product_info.product.price.promotion'
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            $project: {
+              user_id: 0,
+              'product_info.product_id': 0,
+              'product_info.product.quantity': 0,
+              'product_info.product.images': 0,
+              'product_info.product.price': 0,
+              'product_info.product.created_at': 0,
+              'product_info.product.status': 0,
+              'product_info.product.sold': 0,
+              'product_info.product.average_rating': 0,
+              'product_info.product.description': 0,
+              'product_info.product.colors': 0,
+              'product_info.product.categories': 0,
+              'product_info.product.updated_at': 0,
+              'user.password': 0,
+              'user.forgot_password_token': 0,
+              'user.role': 0,
+              'user.addresses': 0,
+              'user.phone': 0,
+              'user.day_of_birth': 0,
+              'user.created_at': 0,
+              'user.updated_at': 0
+            }
+          },
+          {
+            $match: {
+              ...email_query
+            }
+          },
+          {
+            $count: 'total'
+          }
+        ])
+        .toArray()
+    ])
+
+    const total_page = Math.ceil(total[0]?.total / limit_query) || 0
+    return {
+      transaction,
+      pagination: {
+        total_page,
+        page: page_query,
+        limit: limit_query
+      }
+    }
   }
 }
 
