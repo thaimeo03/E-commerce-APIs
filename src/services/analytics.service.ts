@@ -1,4 +1,4 @@
-import { DateQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
+import { DateQuery, ProductsReportQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
 import databaseService from './database.service'
 import { ObjectId } from 'mongodb'
 
@@ -292,6 +292,140 @@ class AnalyticService {
     const total_page = Math.ceil(total[0]?.total / limit_query) || 0
     return {
       transaction,
+      pagination: {
+        total_page,
+        page: page_query,
+        limit: limit_query
+      }
+    }
+  }
+
+  async getProductsReport({ min_date, max_date, name, sort_by, order, page, limit }: ProductsReportQuery) {
+    const min_date_query = min_date ? { created_at: { $gte: new Date(min_date) } } : undefined
+    const max_date_query = max_date ? { created_at: { $lte: new Date(max_date) } } : undefined
+    const name_query = name ? { 'product.name': { $regex: name } } : undefined
+    const page_query = Number(page) || 1
+    const limit_query = Number(limit) || 10
+    const order_by_query = order === 'asc' ? 1 : -1
+    const sort_by_query = sort_by ? { [sort_by]: order_by_query } : { sold: order_by_query }
+
+    const [products, total] = await Promise.all([
+      await databaseService.orders
+        .aggregate([
+          {
+            $match: {
+              ...min_date_query,
+              ...max_date_query
+            }
+          },
+          {
+            $group: {
+              _id: '$product_info.product_id',
+              sold: {
+                $sum: '$product_info.quantity'
+              }
+            }
+          },
+          {
+            $lookup: {
+              from: 'products',
+              localField: '_id',
+              foreignField: '_id',
+              as: 'product'
+            }
+          },
+          {
+            $unwind: {
+              path: '$product'
+            }
+          },
+          {
+            $addFields: {
+              revenue: {
+                $multiply: ['$sold', '$product.price.promotion']
+              }
+            }
+          },
+          {
+            $match: {
+              ...name_query
+            }
+          },
+          {
+            $skip: (page_query - 1) * limit_query
+          },
+          {
+            $limit: limit_query
+          },
+          {
+            $project: {
+              sold: 1,
+              revenue: 1,
+              status: '$product.status',
+              name: '$product.name',
+              image: '$product.main_image',
+              average_rating: '$product.average_rating'
+            }
+          },
+          {
+            $sort: {
+              ...sort_by_query
+            }
+          }
+        ])
+        .toArray(),
+      await databaseService.orders
+        .aggregate([
+          {
+            $match: {
+              ...min_date_query,
+              ...max_date_query
+            }
+          },
+          {
+            $group: {
+              _id: '$product_info.product_id',
+              sold: {
+                $sum: '$product_info.quantity'
+              }
+            }
+          },
+          {
+            $lookup: {
+              from: 'products',
+              localField: '_id',
+              foreignField: '_id',
+              as: 'product'
+            }
+          },
+          {
+            $unwind: {
+              path: '$product'
+            }
+          },
+          {
+            $addFields: {
+              revenue: {
+                $multiply: ['$sold', '$product.price.promotion']
+              }
+            }
+          },
+          {
+            $match: {
+              ...name_query
+            }
+          },
+          {
+            $count: 'total'
+          }
+        ])
+        .toArray()
+    ])
+
+    const total_page = Math.ceil(total[0]?.total / limit_query) || 0
+
+    return {
+      products,
       pagination: {
         total_page,
         page: page_query,

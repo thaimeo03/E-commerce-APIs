@@ -1,7 +1,11 @@
 import { Router } from 'express'
-import { getAnalyticsOverviewController, transactionController } from '~/controllers/analytics.controller'
+import {
+  getAnalyticsOverviewController,
+  getProductsReportController,
+  transactionController
+} from '~/controllers/analytics.controller'
 import { isAdminValidator } from '~/middlewares/admins.middleware'
-import { dateValidator, transactionValidator } from '~/middlewares/analytics.middleware'
+import { dateValidator, getProductsReportValidator, transactionValidator } from '~/middlewares/analytics.middleware'
 import { orderIdValidator } from '~/middlewares/orders.middleware'
 import { paginationValidator } from '~/middlewares/products.middleware'
 import { accessTokenValidator } from '~/middlewares/users.middleware'
@@ -23,6 +27,18 @@ analyticsRouter.get(
   paginationValidator,
   transactionValidator,
   transactionController
+)
+
+// Products report
+// Header: access_token
+// Query: min_date, max_date, name, sort_by: 'sold' | 'revenue', order: 'asc' | 'desc', page, limit
+analyticsRouter.get(
+  '/products',
+  accessTokenValidator,
+  isAdminValidator,
+  paginationValidator,
+  getProductsReportValidator,
+  getProductsReportController
 )
 
 export default analyticsRouter

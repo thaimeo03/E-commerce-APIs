@@ -120,5 +120,7 @@ export const ANALYTIC_MESSAGES = {
   INVALID_ORDER_STATUS: 'Invalid order status',
   USER_NOT_FOUND: 'User not found',
   ORDER_NOT_FOUND: 'Order not found',
-  GET_TRANSACTION_SUCCESSFULLY: 'Get transaction successfully'
+  GET_TRANSACTION_SUCCESSFULLY: 'Get transaction successfully',
+  INVALID_DATE: 'Invalid date',
+  GET_PRODUCTS_REPORT_SUCCESSFULLY: 'Get products report successfully'
 } as const

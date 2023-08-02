@@ -3,8 +3,9 @@ import { ObjectId } from 'mongodb'
 import { OrderStatus } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ANALYTIC_MESSAGES } from '~/constants/messages'
-import { DateQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
+import { DateQuery, ProductsReportQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
+import { productsReportSchema } from '~/models/schemas/analytics.schema'
 import databaseService from '~/services/database.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -76,4 +77,10 @@ export const transactionValidator = wrapHandler(async (req: Request, res: Respon
       })
     }
   }
+})
+
+export const getProductsReportValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { min_date, max_date, sort_by, order } = req.query as ProductsReportQuery
+
+  await productsReportSchema.validateAsync({ min_date, max_date, sort_by, order }, { abortEarly: false })
 })

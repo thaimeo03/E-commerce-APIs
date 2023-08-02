@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ANALYTIC_MESSAGES } from '~/constants/messages'
-import { DateQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
+import { DateQuery, ProductsReportQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
 import analyticService from '~/services/analytics.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -22,6 +22,17 @@ export const transactionController = wrapHandler(async (req: Request, res: Respo
 
   return res.json({
     message: ANALYTIC_MESSAGES.GET_TRANSACTION_SUCCESSFULLY,
+    result
+  })
+})
+
+export const getProductsReportController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { min_date, max_date, name, sort_by, order, page, limit } = req.query as ProductsReportQuery
+
+  const result = await analyticService.getProductsReport({ min_date, max_date, name, sort_by, order, page, limit })
+
+  return res.json({
+    message: ANALYTIC_MESSAGES.GET_PRODUCTS_REPORT_SUCCESSFULLY,
     result
   })
 })

@@ -11,3 +11,13 @@ export interface TransactionQuery {
   page?: string
   limit?: string
 }
+
+export interface ProductsReportQuery {
+  min_date?: string
+  max_date?: string
+  name?: string
+  sort_by?: string
+  order?: string
+  page?: string
+  limit?: string
+}
