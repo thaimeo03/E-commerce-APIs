@@ -1,9 +1,10 @@
 import { DateQuery, ProductsReportQuery, TransactionQuery } from '~/models/interfaces/analytics.interface'
 import databaseService from './database.service'
 import { ObjectId } from 'mongodb'
+import { OrderStatus } from '~/constants/enums'
 
 class AnalyticService {
-  async getAnalytics({ day, month, year }: DateQuery) {
+  async getOverview({ day, month, year }: DateQuery) {
     const dayTarget = Number(day) || 1
     const monthTarget = Number(month) || 1
     const yearTarget = Number(year) || new Date().getFullYear()
@@ -30,7 +31,7 @@ class AnalyticService {
       .aggregate([
         {
           $match: {
-            order_status: 2,
+            order_status: OrderStatus.Completed,
             created_at: {
               $gte: dateMin,
               $lt: dateMax
@@ -314,6 +315,7 @@ class AnalyticService {
         .aggregate([
           {
             $match: {
+              order_status: OrderStatus.Completed,
               ...min_date_query,
               ...max_date_query
             }

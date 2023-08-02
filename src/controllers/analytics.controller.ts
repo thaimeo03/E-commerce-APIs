@@ -7,7 +7,7 @@ import { wrapHandler } from '~/utils/wrapHandler'
 export const getAnalyticsOverviewController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { day, month, year } = req.query as DateQuery
 
-  const result = await analyticService.getAnalytics({ day, month, year })
+  const result = await analyticService.getOverview({ day, month, year })
 
   return res.json({
     message: ANALYTIC_MESSAGES.GET_ANALYTICS_OVERVIEW_SUCCESSFULLY,
