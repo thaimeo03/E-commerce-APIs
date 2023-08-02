@@ -6,7 +6,7 @@ import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ORDER_MESSAGES } from '~/constants/messages'
 import { Address } from '~/models/interfaces/users.interface'
-import { OrderStatus } from '~/constants/enums'
+import { OrderStatus, Status } from '~/constants/enums'
 import Product from '~/models/database/Product'
 
 class OrderService {
@@ -31,6 +31,47 @@ class OrderService {
     // Calculate total price
     const total_price =
       payload.product_info.quantity * (product.price.promotion !== 0 ? product.price.promotion : product.price.regular)
+
+    // Update sold and quantity product
+    const orders = await databaseService.orders
+      .find({
+        order_status: {
+          $ne: OrderStatus.Cancelled
+        },
+        'product_info.product_id': new ObjectId(payload.product_info.product_id)
+      })
+      .toArray()
+    const sold = orders.reduce((total, order) => total + order.product_info.quantity, 0)
+
+    const productChanged = await databaseService.products.findOneAndUpdate(
+      {
+        _id: new ObjectId(payload.product_info.product_id)
+      },
+      {
+        $inc: {
+          quantity: -payload.product_info.quantity
+        },
+        $set: {
+          sold
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+
+    if (productChanged.value?.quantity === 0) {
+      await databaseService.products.updateOne(
+        {
+          _id: new ObjectId(payload.product_info.product_id)
+        },
+        {
+          $set: {
+            status: Status.OutStock
+          }
+        }
+      )
+    }
 
     return {
       order_id: order.insertedId,
@@ -94,24 +135,6 @@ class OrderService {
       await databaseService.orders.updateOne(
         { _id: new ObjectId(order_id) },
         { $set: { order_status }, $currentDate: { updated_at: true } }
-      )
-
-      const sold = await databaseService.orders.countDocuments({
-        order_status: OrderStatus.Completed,
-        'product_info.product_id': order.product_info.product_id
-      })
-      await databaseService.products.updateOne(
-        {
-          _id: order.product_info.product_id
-        },
-        {
-          $set: {
-            sold
-          },
-          $inc: {
-            quantity: -1
-          }
-        }
       )
     } else if (order.order_status === OrderStatus.Completed && order_status !== OrderStatus.Completed) {
       throw new ErrorWithStatus({

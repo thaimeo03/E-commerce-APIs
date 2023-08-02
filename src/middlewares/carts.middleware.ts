@@ -20,17 +20,17 @@ export const checkProductInfo = async (value: ItemCartBody) => {
     })
   }
 
-  if (quantity > product.quantity) {
-    throw new ErrorWithStatus({
-      message: CART_MESSAGES.QUANTITY_LIMIT,
-      status: HTTP_STATUS.BAD_REQUEST
-    })
-  }
-
   if (product.status === Status.OutStock) {
     throw new ErrorWithStatus({
       message: CART_MESSAGES.OUT_OF_STOCK,
       status: HTTP_STATUS.NOT_FOUND
+    })
+  }
+
+  if (quantity > product.quantity) {
+    throw new ErrorWithStatus({
+      message: CART_MESSAGES.QUANTITY_LIMIT,
+      status: HTTP_STATUS.BAD_REQUEST
     })
   }
 
