@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import {
+  cancelOrderController,
   changeOrderStatusController,
   getOrderInfoController,
   orderManyProductsController,
   orderOneProductController
 } from '~/controllers/orders.controller'
 import {
+  cancelOrderValidator,
   changeOrderStatusValidator,
   orderIdValidator,
   orderManyProductsValidator,
@@ -59,5 +61,17 @@ ordersRouter.patch(
 // Header: access_token
 // Params: order_id
 ordersRouter.get('/:order_id', publicUserValidator, orderIdValidator, getOrderInfoController)
+
+// Cancel order (role user)
+// Header: access_token
+// Params: order_id
+ordersRouter.patch(
+  '/cancel/:order_id',
+  accessTokenValidator,
+  isUserValidator,
+  orderIdValidator,
+  cancelOrderValidator,
+  cancelOrderController
+)
 
 export default ordersRouter

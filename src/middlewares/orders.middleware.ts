@@ -13,6 +13,7 @@ import { ORDER_MESSAGES } from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { OrderStatusBody } from '~/models/interfaces/orders.interface'
 import { OrderStatus } from '~/constants/enums'
+import Order from '~/models/database/Order'
 
 const checkAddressAndPhone = async (req: Request) => {
   const { billing_address, receive_phone } = await orderOneProductSchema.validateAsync(omit(req.body, 'product_info'), {
@@ -68,6 +69,8 @@ export const orderIdValidator = wrapHandler(async (req: Request, res: Response, 
       status: HTTP_STATUS.NOT_FOUND
     })
   }
+
+  req.order = order
 })
 
 export const changeOrderStatusValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -90,6 +93,17 @@ export const changeOrderStatusValidator = wrapHandler(async (req: Request, res: 
   if (order_status === OrderStatus.Cancelled) {
     throw new ErrorWithStatus({
       message: ORDER_MESSAGES.DELIVER_CAN_NOT_BE_CANCELLED,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+})
+
+export const cancelOrderValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const order = req.order as Order
+
+  if (order.order_status !== OrderStatus.Pending) {
+    throw new ErrorWithStatus({
+      message: ORDER_MESSAGES.CAN_NOT_BE_CANCELLED_AFTER_PRODUCT_DELIVERED,
       status: HTTP_STATUS.BAD_REQUEST
     })
   }

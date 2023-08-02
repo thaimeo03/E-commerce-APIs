@@ -53,3 +53,13 @@ export const getOrderInfoController = wrapHandler(async (req: Request, res: Resp
     result
   })
 })
+
+export const cancelOrderController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { order_id } = req.params
+
+  await orderService.cancelOrder(order_id)
+
+  return res.json({
+    message: ORDER_MESSAGES.CANCEL_ORDER_SUCCESSFULLY
+  })
+})

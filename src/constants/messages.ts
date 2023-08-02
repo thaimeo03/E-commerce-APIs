@@ -100,7 +100,9 @@ export const ORDER_MESSAGES = {
   CHANGE_ORDER_STATUS_SUCCESSFULLY: 'Change order status successfully',
   ORDER_NOT_COMPLETED: 'Order must be delivered for you successfully',
   CHANGE_ORDER_STATUS_FAILED: 'Change order status failed',
-  GET_ORDER_INFO_SUCCESSFULLY: 'Get order info successfully'
+  GET_ORDER_INFO_SUCCESSFULLY: 'Get order info successfully',
+  CANCEL_ORDER_SUCCESSFULLY: 'Cancel order successfully',
+  CAN_NOT_BE_CANCELLED_AFTER_PRODUCT_DELIVERED: 'Can not be cancelled after product delivered'
 } as const
 
 export const RATING_MESSAGES = {

@@ -32,27 +32,15 @@ class OrderService {
     const total_price =
       payload.product_info.quantity * (product.price.promotion !== 0 ? product.price.promotion : product.price.regular)
 
-    // Update sold and quantity product
-    const orders = await databaseService.orders
-      .find({
-        order_status: {
-          $ne: OrderStatus.Cancelled
-        },
-        'product_info.product_id': new ObjectId(payload.product_info.product_id)
-      })
-      .toArray()
-    const sold = orders.reduce((total, order) => total + order.product_info.quantity, 0)
-
+    // Update sold, quantity product
     const productChanged = await databaseService.products.findOneAndUpdate(
       {
         _id: new ObjectId(payload.product_info.product_id)
       },
       {
         $inc: {
-          quantity: -payload.product_info.quantity
-        },
-        $set: {
-          sold
+          quantity: -payload.product_info.quantity,
+          sold: payload.product_info.quantity
         }
       },
       {
@@ -228,6 +216,39 @@ class OrderService {
       .toArray()
 
     return res
+  }
+
+  async cancelOrder(order_id: string) {
+    const orderModify = await databaseService.orders.findOneAndUpdate(
+      {
+        _id: new ObjectId(order_id)
+      },
+      {
+        $set: {
+          order_status: OrderStatus.Cancelled
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+    const order = orderModify.value as WithId<Order>
+    // Update sold, quantity product
+    const product_id = order.product_info.product_id
+    await databaseService.products.updateOne(
+      {
+        _id: new ObjectId(product_id)
+      },
+      {
+        $inc: {
+          quantity: order.product_info.quantity,
+          sold: -order.product_info.quantity
+        }
+      }
+    )
   }
 }
 
