@@ -4,11 +4,24 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
-import { loginSchema } from '~/models/schemas/users.schema'
+import { loginSchema, registerUserSchema } from '~/models/schemas/users.schema'
 import databaseService from '~/services/database.service'
 import hashPassword from '~/utils/hash'
 import { verifyToken } from '~/utils/jwt'
 import { wrapHandler } from '~/utils/wrapHandler'
+
+export const registerValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const value = await registerUserSchema.validateAsync(req.body, { abortEarly: false })
+
+  const { email } = value
+  const user = await databaseService.users.findOne({ email })
+  if (user) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.EMAIL_ALREADY_EXIST,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+})
 
 export const loginValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const value = await loginSchema.validateAsync(req.body, { abortEarly: false })

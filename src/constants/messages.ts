@@ -19,7 +19,8 @@ export const USER_MESSAGES = {
   LOGOUT_SUCCESSFULLY: 'Logout successfully',
   REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token successfully',
   ACCOUNT_IS_BANNED_OR_NOT_IS_USER: 'Account is banned or you are not is user',
-  ACCOUNT_MUST_BE_DELIVER: 'Account must be deliver'
+  ACCOUNT_MUST_BE_DELIVER: 'Account must be deliver',
+  REGISTER_SUCCESSFULLY: 'Register successfully'
 } as const
 
 export const ADMIN_MESSAGES = {

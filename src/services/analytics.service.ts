@@ -302,8 +302,10 @@ class AnalyticService {
   }
 
   async getProductsReport({ min_date, max_date, name, sort_by, order, page, limit }: ProductsReportQuery) {
-    const min_date_query = min_date ? { created_at: { $gte: new Date(min_date) } } : undefined
-    const max_date_query = max_date ? { created_at: { $lte: new Date(max_date) } } : undefined
+    const min_date_query = min_date ? { $gte: new Date(min_date) } : undefined
+    const max_date_query = max_date ? { $lte: new Date(max_date) } : undefined
+    const date_query =
+      min_date_query || max_date_query ? { created_at: { ...max_date_query, ...min_date_query } } : undefined
     const name_query = name ? { 'product.name': { $regex: name } } : undefined
     const page_query = Number(page) || 1
     const limit_query = Number(limit) || 10
@@ -316,8 +318,7 @@ class AnalyticService {
           {
             $match: {
               order_status: OrderStatus.Completed,
-              ...min_date_query,
-              ...max_date_query
+              ...date_query
             }
           },
           {
@@ -380,8 +381,8 @@ class AnalyticService {
         .aggregate([
           {
             $match: {
-              ...min_date_query,
-              ...max_date_query
+              order_status: OrderStatus.Completed,
+              ...date_query
             }
           },
           {

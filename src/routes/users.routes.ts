@@ -1,8 +1,22 @@
 import { Router } from 'express'
-import { loginController, logoutController, refreshTokenController } from '~/controllers/users.controller'
-import { accessTokenValidator, loginValidator, refreshTokenValidator } from '~/middlewares/users.middleware'
+import {
+  loginController,
+  logoutController,
+  refreshTokenController,
+  registerController
+} from '~/controllers/users.controller'
+import {
+  accessTokenValidator,
+  loginValidator,
+  refreshTokenValidator,
+  registerValidator
+} from '~/middlewares/users.middleware'
 
 const usersRouter = Router()
+
+// Register
+// Body: username, email, password, confirm_password
+usersRouter.post('/register', registerValidator, registerController)
 
 // Login
 // Body: email, password

@@ -1,9 +1,21 @@
 import { NextFunction, Request, Response } from 'express'
 import { Role } from '~/constants/enums'
 import { USER_MESSAGES } from '~/constants/messages'
+import { UserRegisterBody } from '~/models/interfaces/users.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import userService from '~/services/users.service'
 import { wrapHandler } from '~/utils/wrapHandler'
+
+export const registerController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { username, email, password } = req.body as UserRegisterBody
+
+  const result = await userService.register({ username, email, password })
+
+  return res.json({
+    message: USER_MESSAGES.REGISTER_SUCCESSFULLY,
+    result
+  })
+})
 
 export const loginController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   const user_id = req.user?._id.toString() as string

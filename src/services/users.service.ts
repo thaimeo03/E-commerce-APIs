@@ -6,6 +6,7 @@ import hashPassword from '~/utils/hash'
 import { signToken } from '~/utils/jwt'
 import 'dotenv/config'
 import RefreshToken from '~/models/database/RefreshToken'
+import { UserRegisterBody } from '~/models/interfaces/users.interface'
 
 class UserService {
   async signAccessToken({ user_id, role }: { user_id: string; role?: Role }) {
@@ -42,6 +43,19 @@ class UserService {
 
   async signAccessTokenAndRefreshToken({ user_id, role }: { user_id: string; role?: Role }) {
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role })])
+  }
+
+  async register({ username, email, password }: Omit<UserRegisterBody, 'confirm_password'>) {
+    const user = await databaseService.users.insertOne(new User({ username, email, password: hashPassword(password) }))
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({
+      user_id: user.insertedId.toString(),
+      role: Role.User
+    })
+
+    return {
+      access_token,
+      refresh_token
+    }
   }
 
   async login({ user_id, role }: { user_id: string; role: Role }) {
