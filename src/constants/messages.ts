@@ -26,7 +26,9 @@ export const USER_MESSAGES = {
 export const ADMIN_MESSAGES = {
   ROLE_MUST_BE_ADMIN: 'Role must be admin',
   ADMIN_SECRET_KEY_NOT_MATCH: 'Admin secret key does not match',
-  ACCOUNT_IS_BANNED: 'Account is banned'
+  ACCOUNT_IS_BANNED: 'Account is banned',
+  BAN_USER_SUCCESSFULLY: 'Ban user successfully',
+  REGISTER_ADMIN_SUCCESSFULLY: 'Create admin account successfully'
 } as const
 
 export const CATEGORY_MESSAGES = {

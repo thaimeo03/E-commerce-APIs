@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { ObjectId } from 'mongodb'
 import { Role } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
@@ -104,6 +105,17 @@ export const isDeliverValidator = wrapHandler(async (req: Request, res: Response
     throw new ErrorWithStatus({
       message: USER_MESSAGES.ACCOUNT_MUST_BE_DELIVER,
       status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+})
+
+export const userIdValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.params
+  const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+  if (!user || user.role !== Role.User) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.USER_NOT_FOUND,
+      status: HTTP_STATUS.NOT_FOUND
     })
   }
 })

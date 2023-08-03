@@ -27,6 +27,22 @@ class AdminService {
 
     return { access_token, refresh_token }
   }
+
+  async banUser(user_id: string) {
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          role: Role.Banned
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+  }
 }
 
 const adminService = new AdminService()
