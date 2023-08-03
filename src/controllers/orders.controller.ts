@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ORDER_MESSAGES } from '~/constants/messages'
-import { OrderBody, OrderStatusBody } from '~/models/interfaces/orders.interface'
+import { OrderBody, OrderListQuery, OrderStatusBody } from '~/models/interfaces/orders.interface'
 import orderService from '~/services/orders.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -61,5 +61,17 @@ export const cancelOrderController = wrapHandler(async (req: Request, res: Respo
 
   return res.json({
     message: ORDER_MESSAGES.CANCEL_ORDER_SUCCESSFULLY
+  })
+})
+
+export const getOrderListController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+  const { status, page, limit } = req.query as OrderListQuery
+
+  const result = await orderService.getOrderList(user_id, { status, page, limit })
+
+  return res.json({
+    message: ORDER_MESSAGES.GET_ORDER_LIST_SUCCESSFULLY,
+    result
   })
 })

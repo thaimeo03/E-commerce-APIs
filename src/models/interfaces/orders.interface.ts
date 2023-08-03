@@ -23,3 +23,9 @@ export interface OrderBody {
 export interface OrderStatusBody {
   order_status: OrderStatus
 }
+
+export interface OrderListQuery {
+  status?: string
+  page?: string
+  limit?: string
+}

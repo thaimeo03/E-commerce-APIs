@@ -11,7 +11,7 @@ import User from '~/models/database/User'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import { ORDER_MESSAGES } from '~/constants/messages'
 import HTTP_STATUS from '~/constants/httpStatus'
-import { OrderStatusBody } from '~/models/interfaces/orders.interface'
+import { OrderListQuery, OrderStatusBody } from '~/models/interfaces/orders.interface'
 import { OrderStatus } from '~/constants/enums'
 import Order from '~/models/database/Order'
 
@@ -106,5 +106,19 @@ export const cancelOrderValidator = wrapHandler(async (req: Request, res: Respon
       message: ORDER_MESSAGES.CAN_NOT_BE_CANCELLED_AFTER_PRODUCT_DELIVERED,
       status: HTTP_STATUS.BAD_REQUEST
     })
+  }
+})
+
+export const getOrderListValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { status } = req.query as OrderListQuery
+
+  if (status) {
+    const num = Number(status)
+    if (!Object.values(OrderStatus).includes(num)) {
+      throw new ErrorWithStatus({
+        message: ORDER_MESSAGES.INVALID_ORDER,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
   }
 })

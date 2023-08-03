@@ -1,4 +1,4 @@
-import { OrderBody } from '~/models/interfaces/orders.interface'
+import { OrderBody, OrderListQuery } from '~/models/interfaces/orders.interface'
 import databaseService from './database.service'
 import Order from '~/models/database/Order'
 import { ObjectId, WithId } from 'mongodb'
@@ -249,6 +249,100 @@ class OrderService {
         }
       }
     )
+  }
+
+  async getOrderList(user_id: string, { status, page, limit }: OrderListQuery) {
+    const order_status_query = status ? { order_status: Number(status) } : undefined
+    const page_query = page ? Number(page) : 1
+    const limit_query = limit ? Number(limit) : 5
+
+    const [orders, total] = await Promise.all([
+      await databaseService.orders
+        .aggregate([
+          {
+            $match: {
+              user_id: new ObjectId(user_id),
+              ...order_status_query
+            }
+          },
+          {
+            $skip: (page_query - 1) * limit_query
+          },
+          {
+            $limit: limit_query
+          },
+          {
+            $lookup: {
+              from: 'products',
+              localField: 'product_info.product_id',
+              foreignField: '_id',
+              as: 'product_info.product'
+            }
+          },
+          {
+            $unwind: {
+              path: '$product_info.product'
+            }
+          },
+          {
+            $addFields: {
+              'product_info.total_price': {
+                $multiply: [
+                  '$product_info.quantity',
+                  {
+                    $cond: [
+                      {
+                        $eq: ['$product_info.product.price.promotion', 0]
+                      },
+                      1,
+                      '$product_info.product.price.promotion'
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            $project: {
+              user_id: 0,
+              order_status: 0,
+              'product_info.product_id': 0,
+              'product_info.product.quantity': 0,
+              'product_info.product.images': 0,
+              'product_info.product.price': 0,
+              'product_info.product.created_at': 0,
+              'product_info.product.status': 0,
+              'product_info.product.sold': 0,
+              'product_info.product.average_rating': 0,
+              'product_info.product.description': 0,
+              'product_info.product.colors': 0,
+              'product_info.product.categories': 0,
+              'product_info.product.updated_at': 0
+            }
+          },
+          {
+            $sort: {
+              updated_at: -1
+            }
+          }
+        ])
+        .toArray(),
+      await databaseService.orders.countDocuments({
+        user_id: new ObjectId(user_id),
+        ...order_status_query
+      })
+    ])
+
+    const total_pages = Math.ceil(total / limit_query)
+
+    return {
+      orders,
+      pagination: {
+        total_pages,
+        page: page_query,
+        limit: limit_query
+      }
+    }
   }
 }
 

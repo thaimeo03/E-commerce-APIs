@@ -3,16 +3,19 @@ import {
   cancelOrderController,
   changeOrderStatusController,
   getOrderInfoController,
+  getOrderListController,
   orderManyProductsController,
   orderOneProductController
 } from '~/controllers/orders.controller'
 import {
   cancelOrderValidator,
   changeOrderStatusValidator,
+  getOrderListValidator,
   orderIdValidator,
   orderManyProductsValidator,
   orderOneProductValidator
 } from '~/middlewares/orders.middleware'
+import { paginationValidator } from '~/middlewares/products.middleware'
 import {
   accessTokenValidator,
   isDeliverValidator,
@@ -72,6 +75,18 @@ ordersRouter.patch(
   orderIdValidator,
   cancelOrderValidator,
   cancelOrderController
+)
+
+// Get order list by user_id (Can be understand as transaction history)
+// Header: access_token
+// Query: status, page, limit
+ordersRouter.get(
+  '/',
+  accessTokenValidator,
+  isUserValidator,
+  paginationValidator,
+  getOrderListValidator,
+  getOrderListController
 )
 
 export default ordersRouter
