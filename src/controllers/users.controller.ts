@@ -63,3 +63,14 @@ export const updateUserController = wrapHandler(async (req: Request, res: Respon
     result
   })
 })
+
+export const getProfileController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+
+  const result = await userService.getProfile(user_id)
+
+  return res.json({
+    message: USER_MESSAGES.GET_PROFILE_SUCCESSFULLY,
+    result
+  })
+})

@@ -27,7 +27,8 @@ export const USER_MESSAGES = {
   ADDRESS_CITY_IS_REQUIRED: 'Address city is required',
   ADDRESS_CITY_MIN_LENGTH: 'Address city must be at least 1 characters',
   ADDRESS_CITY_MAX_LENGTH: 'Address city must be at most 100 characters',
-  UPDATE_USER_SUCCESSFULLY: 'Update user successfully'
+  UPDATE_USER_SUCCESSFULLY: 'Update user successfully',
+  GET_PROFILE_SUCCESSFULLY: 'Get profile successfully'
 } as const
 
 export const ADMIN_MESSAGES = {

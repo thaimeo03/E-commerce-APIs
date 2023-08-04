@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  getProfileController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -37,5 +38,8 @@ usersRouter.post('/refresh-token', refreshTokenValidator, refreshTokenController
 // Update user
 // Body: UpdateUserBody
 usersRouter.put('/update', accessTokenValidator, isUserValidator, updateUserValidator, updateUserController)
+
+// Get profile
+usersRouter.get('/profile', accessTokenValidator, isUserValidator, getProfileController)
 
 export default usersRouter

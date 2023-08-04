@@ -58,5 +58,5 @@ export const updateUserSchema = Joi.object<UpdateUserBody>({
     .required(),
   phone: Joi.array().items(Joi.string()).required(),
   avatar: Joi.string().required(),
-  day_of_birth: Joi.date().required()
+  day_of_birth: Joi.date().iso().required()
 })
