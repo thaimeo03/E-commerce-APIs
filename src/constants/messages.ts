@@ -28,7 +28,11 @@ export const USER_MESSAGES = {
   ADDRESS_CITY_MIN_LENGTH: 'Address city must be at least 1 characters',
   ADDRESS_CITY_MAX_LENGTH: 'Address city must be at most 100 characters',
   UPDATE_USER_SUCCESSFULLY: 'Update user successfully',
-  GET_PROFILE_SUCCESSFULLY: 'Get profile successfully'
+  GET_PROFILE_SUCCESSFULLY: 'Get profile successfully',
+  EMAIL_NOT_EXIST: 'Email not exist',
+  FORGOT_PASSWORD_SUCCESSFULLY: 'Check your email to reset password',
+  OLD_PASSWORD_INCORRECT: 'Old password incorrect',
+  RESET_PASSWORD_SUCCESSFULLY: 'Reset password successfully'
 } as const
 
 export const ADMIN_MESSAGES = {

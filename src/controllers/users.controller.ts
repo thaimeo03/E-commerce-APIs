@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
 import { Role } from '~/constants/enums'
 import { USER_MESSAGES } from '~/constants/messages'
-import { UpdateUserBody, UserRegisterBody } from '~/models/interfaces/users.interface'
+import User from '~/models/database/User'
+import {
+  ForgotPasswordBody,
+  ResetPasswordBody,
+  UpdateUserBody,
+  UserRegisterBody
+} from '~/models/interfaces/users.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import userService from '~/services/users.service'
 import { wrapHandler } from '~/utils/wrapHandler'
@@ -72,5 +78,28 @@ export const getProfileController = wrapHandler(async (req: Request, res: Respon
   return res.json({
     message: USER_MESSAGES.GET_PROFILE_SUCCESSFULLY,
     result
+  })
+})
+
+export const forgotPasswordController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user = req.user as User
+  const user_id = user._id.toString()
+
+  await userService.forgotPassword(user_id)
+
+  return res.json({
+    message: USER_MESSAGES.FORGOT_PASSWORD_SUCCESSFULLY
+  })
+})
+
+export const resetPasswordController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user = req.user as User
+  const user_id = user._id.toString()
+  const { new_password } = req.body as ResetPasswordBody
+
+  await userService.resetPassword({ user_id, new_password })
+
+  return res.json({
+    message: USER_MESSAGES.RESET_PASSWORD_SUCCESSFULLY
   })
 })

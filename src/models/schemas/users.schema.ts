@@ -1,5 +1,11 @@
 import Joi from 'joi'
-import { LoginBody, UpdateUserBody, UserRegisterBody } from '../interfaces/users.interface'
+import {
+  ForgotPasswordBody,
+  LoginBody,
+  ResetPasswordBody,
+  UpdateUserBody,
+  UserRegisterBody
+} from '../interfaces/users.interface'
 import { USER_MESSAGES } from '~/constants/messages'
 
 export const registerSchema: Joi.PartialSchemaMap<any> = {
@@ -59,4 +65,20 @@ export const updateUserSchema = Joi.object<UpdateUserBody>({
   phone: Joi.array().items(Joi.string()).required(),
   avatar: Joi.string().required(),
   day_of_birth: Joi.date().iso().required()
+})
+
+export const forgotPasswordSchema = Joi.object<ForgotPasswordBody>({
+  email: Joi.string().email().required().messages({
+    'string.empty': USER_MESSAGES.EMAIL_IS_REQUIRED,
+    'string.email': USER_MESSAGES.EMAIL_IS_INVALID
+  })
+})
+
+export const resetPasswordSchema = Joi.object<ResetPasswordBody>({
+  forgot_password_token: Joi.string().required(),
+  old_password: Joi.string().min(6).required(),
+  new_password: Joi.string().min(6).required(),
+  confirm_new_password: Joi.string().valid(Joi.ref('new_password')).required().messages({
+    'any.only': USER_MESSAGES.CONFIRM_PASSWORD_DO_NOT_MATCH
+  })
 })

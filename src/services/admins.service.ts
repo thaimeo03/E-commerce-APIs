@@ -9,15 +9,13 @@ import RefreshToken from '~/models/database/RefreshToken'
 class AdminService {
   async registerAdmin(payload: { username: string; email: string; password: string }) {
     const _id = new ObjectId()
-    const forgot_password_token = await userService.signForgotPasswordToken({ user_id: _id.toString() })
     const [_, token] = await Promise.all([
       await databaseService.users.insertOne(
         new User({
           ...payload,
           password: hashPassword(payload.password),
           _id,
-          role: Role.Admin,
-          forgot_password_token
+          role: Role.Admin
         })
       ),
       userService.signAccessTokenAndRefreshToken({ user_id: _id.toString(), role: Role.Admin })

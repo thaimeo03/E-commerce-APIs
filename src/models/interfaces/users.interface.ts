@@ -49,3 +49,14 @@ export interface UpdateUserBody {
   avatar: string
   day_of_birth: Date
 }
+
+export interface ForgotPasswordBody {
+  email: string
+}
+
+export interface ResetPasswordBody {
+  forgot_password_token: string
+  old_password: string
+  new_password: string
+  confirm_new_password: string
+}

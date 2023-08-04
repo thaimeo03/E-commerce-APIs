@@ -4,9 +4,15 @@ import { Role } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
-import { UpdateUserBody } from '~/models/interfaces/users.interface'
+import { ForgotPasswordBody, ResetPasswordBody, UpdateUserBody } from '~/models/interfaces/users.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
-import { loginSchema, registerUserSchema, updateUserSchema } from '~/models/schemas/users.schema'
+import {
+  forgotPasswordSchema,
+  loginSchema,
+  registerUserSchema,
+  resetPasswordSchema,
+  updateUserSchema
+} from '~/models/schemas/users.schema'
 import databaseService from '~/services/database.service'
 import hashPassword from '~/utils/hash'
 import { verifyToken } from '~/utils/jwt'
@@ -123,4 +129,43 @@ export const userIdValidator = wrapHandler(async (req: Request, res: Response, n
 
 export const updateUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   await updateUserSchema.validateAsync(req.body as UpdateUserBody, { abortEarly: false })
+})
+
+export const forgotPasswordValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const value = await forgotPasswordSchema.validateAsync(req.body as ForgotPasswordBody, { abortEarly: false })
+
+  const { email } = value
+
+  const user = await databaseService.users.findOne({ email })
+  if (!user) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.EMAIL_NOT_EXIST,
+      status: HTTP_STATUS.NOT_FOUND
+    })
+  }
+
+  req.user = user as User
+})
+
+export const resetPasswordValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const value = await resetPasswordSchema.validateAsync(req.body as ResetPasswordBody, { abortEarly: false })
+
+  const { forgot_password_token, old_password } = value
+  const user = await databaseService.users.findOne({ forgot_password_token })
+
+  if (!user) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.USER_NOT_FOUND,
+      status: HTTP_STATUS.NOT_FOUND
+    })
+  }
+
+  if (user.password !== hashPassword(old_password)) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.OLD_PASSWORD_INCORRECT,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+
+  req.user = user as User
 })

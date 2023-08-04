@@ -130,6 +130,46 @@ class UserService {
 
     return user
   }
+
+  async forgotPassword(user_id: string) {
+    const forgot_password_token = await this.signForgotPasswordToken({ user_id })
+
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          forgot_password_token
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+
+    // Send email to user to request reset password
+    // User click to button have link as http://localhost:3000/reset-password?token=forgot_password_token
+    // Client will get forgot_password_token then send to server
+    console.log(forgot_password_token)
+  }
+
+  async resetPassword({ user_id, new_password }: { user_id: string; new_password: string }) {
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          password: hashPassword(new_password),
+          forgot_password_token: ''
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+  }
 }
 
 const userService = new UserService()
