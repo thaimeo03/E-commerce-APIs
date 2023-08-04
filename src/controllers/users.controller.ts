@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { Role } from '~/constants/enums'
 import { USER_MESSAGES } from '~/constants/messages'
-import { UserRegisterBody } from '~/models/interfaces/users.interface'
+import { UpdateUserBody, UserRegisterBody } from '~/models/interfaces/users.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import userService from '~/services/users.service'
 import { wrapHandler } from '~/utils/wrapHandler'
@@ -48,6 +48,18 @@ export const refreshTokenController = wrapHandler(async (req: Request, res: Resp
 
   res.json({
     message: USER_MESSAGES.REFRESH_TOKEN_SUCCESSFULLY,
+    result
+  })
+})
+
+export const updateUserController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+  const payload = req.body as UpdateUserBody
+
+  const result = await userService.updateUser({ payload, user_id })
+
+  return res.json({
+    message: USER_MESSAGES.UPDATE_USER_SUCCESSFULLY,
     result
   })
 })

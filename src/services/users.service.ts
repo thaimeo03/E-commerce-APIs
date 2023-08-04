@@ -6,7 +6,7 @@ import hashPassword from '~/utils/hash'
 import { signToken } from '~/utils/jwt'
 import 'dotenv/config'
 import RefreshToken from '~/models/database/RefreshToken'
-import { UserRegisterBody } from '~/models/interfaces/users.interface'
+import { UpdateUserBody, UserRegisterBody } from '~/models/interfaces/users.interface'
 
 class UserService {
   async signAccessToken({ user_id, role }: { user_id: string; role?: Role }) {
@@ -93,6 +93,25 @@ class UserService {
     ])
 
     return { access_token, refresh_token }
+  }
+
+  async updateUser({ payload, user_id }: { payload: UpdateUserBody; user_id: string }) {
+    const user = await databaseService.users.findOneAndUpdate(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: payload,
+        $currentDate: {
+          updated_at: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+
+    return user.value
   }
 }
 

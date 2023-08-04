@@ -41,3 +41,11 @@ export interface LoginBody {
   email: string
   password: string
 }
+
+export interface UpdateUserBody {
+  username: string
+  addresses: Address[]
+  phone: string[]
+  avatar: string
+  day_of_birth: Date
+}

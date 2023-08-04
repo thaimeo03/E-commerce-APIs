@@ -20,7 +20,14 @@ export const USER_MESSAGES = {
   REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token successfully',
   ACCOUNT_IS_BANNED_OR_NOT_IS_USER: 'Account is banned or you are not is user',
   ACCOUNT_MUST_BE_DELIVER: 'Account must be deliver',
-  REGISTER_SUCCESSFULLY: 'Register successfully'
+  REGISTER_SUCCESSFULLY: 'Register successfully',
+  ADDRESS_STREET_IS_REQUIRED: 'Address street is required',
+  ADDRESS_STREET_MIN_LENGTH: 'Address street must be at least 1 characters',
+  ADDRESS_STREET_MAX_LENGTH: 'Address street must be at most 200 characters',
+  ADDRESS_CITY_IS_REQUIRED: 'Address city is required',
+  ADDRESS_CITY_MIN_LENGTH: 'Address city must be at least 1 characters',
+  ADDRESS_CITY_MAX_LENGTH: 'Address city must be at most 100 characters',
+  UPDATE_USER_SUCCESSFULLY: 'Update user successfully'
 } as const
 
 export const ADMIN_MESSAGES = {

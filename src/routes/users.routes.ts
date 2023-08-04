@@ -3,13 +3,16 @@ import {
   loginController,
   logoutController,
   refreshTokenController,
-  registerController
+  registerController,
+  updateUserController
 } from '~/controllers/users.controller'
 import {
   accessTokenValidator,
+  isUserValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  updateUserValidator
 } from '~/middlewares/users.middleware'
 
 const usersRouter = Router()
@@ -30,5 +33,9 @@ usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, logoutC
 // Refresh token
 // Body: refresh_token
 usersRouter.post('/refresh-token', refreshTokenValidator, refreshTokenController)
+
+// Update user
+// Body: UpdateUserBody
+usersRouter.put('/update', accessTokenValidator, isUserValidator, updateUserValidator, updateUserController)
 
 export default usersRouter

@@ -4,8 +4,9 @@ import { Role } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
+import { UpdateUserBody } from '~/models/interfaces/users.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
-import { loginSchema, registerUserSchema } from '~/models/schemas/users.schema'
+import { loginSchema, registerUserSchema, updateUserSchema } from '~/models/schemas/users.schema'
 import databaseService from '~/services/database.service'
 import hashPassword from '~/utils/hash'
 import { verifyToken } from '~/utils/jwt'
@@ -118,4 +119,8 @@ export const userIdValidator = wrapHandler(async (req: Request, res: Response, n
       status: HTTP_STATUS.NOT_FOUND
     })
   }
+})
+
+export const updateUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  await updateUserSchema.validateAsync(req.body as UpdateUserBody, { abortEarly: false })
 })
