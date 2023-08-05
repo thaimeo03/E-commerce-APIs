@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import {
+  ChangePasswordBody,
   ForgotPasswordBody,
   LoginBody,
   ResetPasswordBody,
@@ -74,11 +75,17 @@ export const forgotPasswordSchema = Joi.object<ForgotPasswordBody>({
   })
 })
 
-export const resetPasswordSchema = Joi.object<ResetPasswordBody>({
-  forgot_password_token: Joi.string().required(),
+const checkNewPasswordSchema: Joi.PartialSchemaMap<any> = {
   old_password: Joi.string().min(6).required(),
   new_password: Joi.string().min(6).required(),
   confirm_new_password: Joi.string().valid(Joi.ref('new_password')).required().messages({
     'any.only': USER_MESSAGES.CONFIRM_PASSWORD_DO_NOT_MATCH
   })
+}
+
+export const resetPasswordSchema = Joi.object<ResetPasswordBody>({
+  forgot_password_token: Joi.string().required(),
+  ...checkNewPasswordSchema
 })
+
+export const changePasswordSchema = Joi.object<ChangePasswordBody>(checkNewPasswordSchema)

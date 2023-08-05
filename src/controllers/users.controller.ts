@@ -3,6 +3,7 @@ import { Role } from '~/constants/enums'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
 import {
+  ChangePasswordBody,
   ForgotPasswordBody,
   ResetPasswordBody,
   UpdateUserBody,
@@ -101,5 +102,16 @@ export const resetPasswordController = wrapHandler(async (req: Request, res: Res
 
   return res.json({
     message: USER_MESSAGES.RESET_PASSWORD_SUCCESSFULLY
+  })
+})
+
+export const changePasswordController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+  const { new_password } = req.body as ChangePasswordBody
+
+  await userService.resetPassword({ user_id, new_password })
+
+  return res.json({
+    message: USER_MESSAGES.CHANGE_PASSWORD_SUCCESSFULLY
   })
 })

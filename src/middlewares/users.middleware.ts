@@ -4,9 +4,15 @@ import { Role } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USER_MESSAGES } from '~/constants/messages'
 import User from '~/models/database/User'
-import { ForgotPasswordBody, ResetPasswordBody, UpdateUserBody } from '~/models/interfaces/users.interface'
+import {
+  ChangePasswordBody,
+  ForgotPasswordBody,
+  ResetPasswordBody,
+  UpdateUserBody
+} from '~/models/interfaces/users.interface'
 import { ErrorWithStatus } from '~/models/res/ErrorCustom'
 import {
+  changePasswordSchema,
   forgotPasswordSchema,
   loginSchema,
   registerUserSchema,
@@ -168,4 +174,27 @@ export const resetPasswordValidator = wrapHandler(async (req: Request, res: Resp
   }
 
   req.user = user as User
+})
+
+export const changePasswordValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const value = await changePasswordSchema.validateAsync(req.body as ChangePasswordBody, { abortEarly: false })
+
+  const { old_password } = value
+  const user_id = req.decodedAccessToken?.user_id as string
+
+  const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+
+  if (!user) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.USER_NOT_FOUND,
+      status: HTTP_STATUS.NOT_FOUND
+    })
+  }
+
+  if (user.password !== hashPassword(old_password)) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.OLD_PASSWORD_INCORRECT,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
 })

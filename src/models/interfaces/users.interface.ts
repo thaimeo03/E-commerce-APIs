@@ -60,3 +60,5 @@ export interface ResetPasswordBody {
   new_password: string
   confirm_new_password: string
 }
+
+export type ChangePasswordBody = Omit<ResetPasswordBody, 'forgot_password_token'>

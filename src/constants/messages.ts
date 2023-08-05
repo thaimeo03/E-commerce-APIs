@@ -32,7 +32,8 @@ export const USER_MESSAGES = {
   EMAIL_NOT_EXIST: 'Email not exist',
   FORGOT_PASSWORD_SUCCESSFULLY: 'Check your email to reset password',
   OLD_PASSWORD_INCORRECT: 'Old password incorrect',
-  RESET_PASSWORD_SUCCESSFULLY: 'Reset password successfully'
+  RESET_PASSWORD_SUCCESSFULLY: 'Reset password successfully',
+  CHANGE_PASSWORD_SUCCESSFULLY: 'Change password successfully'
 } as const
 
 export const ADMIN_MESSAGES = {
