@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 import databaseService from './database.service'
 import User from '~/models/database/User'
 import { Role } from '~/constants/enums'
@@ -7,6 +7,7 @@ import { signToken } from '~/utils/jwt'
 import 'dotenv/config'
 import RefreshToken from '~/models/database/RefreshToken'
 import { UpdateUserBody, UserRegisterBody } from '~/models/interfaces/users.interface'
+import { sendEmailVerifyForgotPassword } from '~/utils/sendEmail'
 
 class UserService {
   async signAccessToken({ user_id, role }: { user_id: string; role?: Role }) {
@@ -134,7 +135,7 @@ class UserService {
   async forgotPassword(user_id: string) {
     const forgot_password_token = await this.signForgotPasswordToken({ user_id })
 
-    await databaseService.users.updateOne(
+    const user = await databaseService.users.findOneAndUpdate(
       {
         _id: new ObjectId(user_id)
       },
@@ -145,13 +146,18 @@ class UserService {
         $currentDate: {
           updated_at: true
         }
+      },
+      {
+        returnDocument: 'after'
       }
     )
+
+    const { username, email } = user.value as WithId<User>
 
     // Send email to user to request reset password
     // User click to button have link as http://localhost:3000/reset-password?token=forgot_password_token
     // Client will get forgot_password_token then send to server
-    console.log(forgot_password_token)
+    await sendEmailVerifyForgotPassword({ toAddress: email, forgot_password_token, username })
   }
 
   async resetPassword({ user_id, new_password }: { user_id: string; new_password: string }) {
