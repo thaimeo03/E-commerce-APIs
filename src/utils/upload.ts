@@ -3,7 +3,10 @@ import { File } from 'formidable'
 import fs from 'fs'
 import crypto from 'crypto'
 import { UPLOAD_DIR_TEMP, UPLOAD_IMAGE_DIR } from '~/constants/dir'
+import { Upload } from '@aws-sdk/lib-storage'
+import { S3Client, S3 } from '@aws-sdk/client-s3'
 import path from 'path'
+import 'dotenv/config'
 
 export const initUploadFile = () => {
   ;[UPLOAD_DIR_TEMP, UPLOAD_IMAGE_DIR].forEach((dir) => {
@@ -61,4 +64,38 @@ export const deleteImageFileByUrl = (urls: string[]) => {
       fs.unlinkSync(imageDir)
     })
   )
+}
+
+export const uploadImageFileToS3 = ({
+  nameFile,
+  filepath,
+  type
+}: {
+  nameFile: string
+  filepath: string
+  type: string
+}) => {
+  const uploadS3 = new Upload({
+    client: new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
+      }
+    }),
+    params: {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `images/${nameFile}`,
+      Body: fs.readFileSync(filepath),
+      ContentType: type
+    },
+    tags: [
+      /*...*/
+    ], // optional tags
+    queueSize: 4, // optional concurrency configuration
+    partSize: 1024 * 1024 * 5, // optional size of each part, in bytes, at least 5MB
+    leavePartsOnError: false // optional manually handle dropped parts
+  })
+
+  return uploadS3.done()
 }
