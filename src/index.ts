@@ -12,6 +12,7 @@ import cartsRouter from './routes/cart.routes'
 import ordersRouter from './routes/orders.routes'
 import ratingsRouter from './routes/ratings.routes'
 import analyticsRouter from './routes/analytics.routes'
+import cors from 'cors'
 
 const app = express()
 const HOSTNAME = 'localhost'
@@ -20,6 +21,7 @@ initUploadFile()
 databaseService.connect()
 
 app.use(express.json())
+app.use(cors())
 // routes here
 app.use('/admin', adminRouter)
 app.use('/categories', categoriesRouter)
