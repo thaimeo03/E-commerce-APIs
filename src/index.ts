@@ -13,10 +13,11 @@ import ordersRouter from './routes/orders.routes'
 import ratingsRouter from './routes/ratings.routes'
 import analyticsRouter from './routes/analytics.routes'
 import cors from 'cors'
+import 'dotenv/config'
 
 const app = express()
 const HOSTNAME = 'localhost'
-const PORT = 4000
+const PORT = process.env.PORT || 10000
 initUploadFile()
 databaseService.connect()
 
@@ -38,6 +39,6 @@ app.use('/static/image', express.static(UPLOAD_IMAGE_DIR))
 // Error handling
 app.use(errorHandler)
 
-app.listen(PORT, HOSTNAME, function () {
+app.listen(PORT, function () {
   console.log(`Server running at http://${HOSTNAME}:${PORT}/`)
 })
