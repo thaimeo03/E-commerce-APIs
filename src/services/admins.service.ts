@@ -41,6 +41,22 @@ class AdminService {
       }
     )
   }
+
+  async unbannedUser(user_id: string) {
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          role: Role.User
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+  }
 }
 
 const adminService = new AdminService()

@@ -21,3 +21,12 @@ export const banUserController = wrapHandler(async (req: Request, res: Response,
     message: ADMIN_MESSAGES.BAN_USER_SUCCESSFULLY
   })
 })
+
+export const unbannedUserController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.params
+  await adminService.unbannedUser(user_id)
+
+  return res.json({
+    message: ADMIN_MESSAGES.UNBANNED_USER_SUCCESSFULLY
+  })
+})

@@ -133,6 +133,24 @@ export const userIdValidator = wrapHandler(async (req: Request, res: Response, n
   }
 })
 
+export const unbannedUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.params
+  const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+  if (!user) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.USER_NOT_FOUND,
+      status: HTTP_STATUS.NOT_FOUND
+    })
+  }
+
+  if (user.role !== Role.Banned) {
+    throw new ErrorWithStatus({
+      message: USER_MESSAGES.USER_NOT_BE_BANNED,
+      status: HTTP_STATUS.BAD_REQUEST
+    })
+  }
+})
+
 export const updateUserValidator = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
   await updateUserSchema.validateAsync(req.body as UpdateUserBody, { abortEarly: false })
 })

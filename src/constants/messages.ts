@@ -33,7 +33,8 @@ export const USER_MESSAGES = {
   FORGOT_PASSWORD_SUCCESSFULLY: 'Check your email to reset password',
   OLD_PASSWORD_INCORRECT: 'Old password incorrect',
   RESET_PASSWORD_SUCCESSFULLY: 'Reset password successfully',
-  CHANGE_PASSWORD_SUCCESSFULLY: 'Change password successfully'
+  CHANGE_PASSWORD_SUCCESSFULLY: 'Change password successfully',
+  USER_NOT_BE_BANNED: 'User not be banned'
 } as const
 
 export const ADMIN_MESSAGES = {
@@ -41,7 +42,8 @@ export const ADMIN_MESSAGES = {
   ADMIN_SECRET_KEY_NOT_MATCH: 'Admin secret key does not match',
   ACCOUNT_IS_BANNED: 'Account is banned',
   BAN_USER_SUCCESSFULLY: 'Ban user successfully',
-  REGISTER_ADMIN_SUCCESSFULLY: 'Create admin account successfully'
+  REGISTER_ADMIN_SUCCESSFULLY: 'Create admin account successfully',
+  UNBANNED_USER_SUCCESSFULLY: 'Unbanned user successfully'
 } as const
 
 export const CATEGORY_MESSAGES = {
