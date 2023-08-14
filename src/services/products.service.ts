@@ -5,6 +5,7 @@ import Product from '~/models/database/Product'
 import { deleteImageFileByUrl } from '~/utils/upload'
 import { ObjectId, WithId } from 'mongodb'
 import { omit } from 'lodash'
+import { deleteImagesOnS3 } from '~/utils/aws'
 
 class ProductService {
   async addProduct(payload: ProductBody) {
@@ -30,7 +31,7 @@ class ProductService {
     const imagesUrl = product.images
     imagesUrl.push(product.main_image)
 
-    await Promise.all([deleteImageFileByUrl(imagesUrl), databaseService.products.deleteOne({ _id: product._id })])
+    await Promise.all([databaseService.products.deleteOne({ _id: product._id }), deleteImagesOnS3(imagesUrl)])
   }
 
   async removeProductFromCategory({ product, name }: { product: Product; name: string }) {

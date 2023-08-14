@@ -1,15 +1,8 @@
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
+import { SendEmailCommand } from '@aws-sdk/client-ses'
 import fs from 'fs'
 import 'dotenv/config'
 import path from 'path'
-
-const sesClient = new SESClient({
-  region: process.env.AWS_REGION,
-  credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
-  }
-})
+import { sesClient } from './aws'
 
 const createSendEmailCommand = ({
   toAddress,
