@@ -83,7 +83,7 @@ class ProductService {
     const categories_query = category_name ? { categories: category_name } : undefined
     const name_query = name ? { $text: { $search: encodeURIComponent(name) } } : undefined
     const order_query = order === 'asc' ? 1 : -1 // default -1
-    const sort_key = sort_by === 'price' ? 'price.regular' : sort_by || 'created_at'
+    const sort_key = sort_by === 'price' ? 'price.promotion' : sort_by || 'created_at'
     const sort_query = {
       [sort_key]: order_query
     }
@@ -94,7 +94,7 @@ class ProductService {
     const price_range_query =
       price_min || price_max
         ? {
-            'price.regular': {
+            'price.promotion': {
               ...price_min_query,
               ...price_max_query
             }
