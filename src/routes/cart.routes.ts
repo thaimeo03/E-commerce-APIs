@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { addToCardController, removeProductFromCartController } from '~/controllers/carts.controller'
+import {
+  addToCardController,
+  getCartListController,
+  removeProductFromCartController
+} from '~/controllers/carts.controller'
 import { addToCardValidator } from '~/middlewares/carts.middleware'
 import { idProductValidator } from '~/middlewares/products.middleware'
 import { accessTokenValidator, isUserValidator } from '~/middlewares/users.middleware'
@@ -21,5 +25,9 @@ cartsRouter.delete(
   idProductValidator,
   removeProductFromCartController
 )
+
+// Get cart list
+// Header: access_token
+cartsRouter.get('/', accessTokenValidator, isUserValidator, getCartListController)
 
 export default cartsRouter

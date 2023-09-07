@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ProductBody, ProductQueries } from '~/models/interfaces/products.interface'
 import databaseService from './database.service'
 import Category from '~/models/database/Category'
@@ -81,7 +82,8 @@ class ProductService {
     { name, order, sort_by, limit, page, price_min, price_max, rating }: ProductQueries
   ) {
     const categories_query = category_name ? { categories: category_name } : undefined
-    const name_query = name ? { $text: { $search: encodeURIComponent(name) } } : undefined
+    const nameEncoded = encodeURIComponent(name as string).replace(/%20/g, ' ')
+    const name_query = name ? { $text: { $search: `"${nameEncoded}"` } } : undefined
     const order_query = order === 'asc' ? 1 : -1 // default -1
     const sort_key = sort_by === 'price' ? 'price.promotion' : sort_by || 'created_at'
     const sort_query = {

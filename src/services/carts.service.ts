@@ -80,6 +80,47 @@ class CartService {
 
     return result.value
   }
+
+  async getCartList(user_id: string) {
+    const res = await databaseService.carts
+      .aggregate([
+        {
+          $match: {
+            user_id: new ObjectId(user_id)
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'products_added.product_id',
+            foreignField: '_id',
+            as: 'products_info'
+          }
+        },
+        {
+          $project: {
+            products_added: 1,
+            products_info: 1,
+            updated_at: 1
+          }
+        }
+      ])
+      .toArray()
+
+    const result = res[0].products_added
+      .map((item: any, index: number) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price: res[0].products_info[index].price.promotion,
+        name: res[0].products_info[index].name,
+        main_image: res[0].products_info[index].main_image,
+        color: item.color,
+        updated_at: res[0].updated_at
+      }))
+      .reverse()
+
+    return result
+  }
 }
 
 const cartService = new CartService()

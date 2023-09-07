@@ -97,6 +97,7 @@ export const CART_MESSAGES = {
   ADD_TO_CART_SUCCESSFULLY: 'Add product to cart successfully',
   PRODUCT_ALREADY_ADDED: 'Product already added',
   REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully',
+  GET_CART_LIST_SUCCESSFULLY: 'Get cart list successfully',
   OUT_OF_STOCK: 'Out of stock'
 } as const
 

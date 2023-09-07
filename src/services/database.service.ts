@@ -57,6 +57,13 @@ class DatabaseService {
   get ratings(): Collection<Rating> {
     return this.db.collection(process.env.DB_RATINGS_COLLECTION as string)
   }
+
+  // Close connection
+
+  // Index collections
+  createProductIndex() {
+    return this.products.createIndex({ name: 'text' }, { default_language: 'none' })
+  }
 }
 
 const databaseService = new DatabaseService()

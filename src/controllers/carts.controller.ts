@@ -25,3 +25,14 @@ export const removeProductFromCartController = wrapHandler(async (req: Request, 
     result
   })
 })
+
+export const getCartListController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+
+  const result = await cartService.getCartList(user_id)
+
+  return res.json({
+    message: CART_MESSAGES.GET_CART_LIST_SUCCESSFULLY,
+    result
+  })
+})
