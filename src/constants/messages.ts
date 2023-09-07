@@ -98,7 +98,9 @@ export const CART_MESSAGES = {
   PRODUCT_ALREADY_ADDED: 'Product already added',
   REMOVE_PRODUCT_FROM_CART_SUCCESSFULLY: 'Remove product from cart successfully',
   GET_CART_LIST_SUCCESSFULLY: 'Get cart list successfully',
-  OUT_OF_STOCK: 'Out of stock'
+  OUT_OF_STOCK: 'Out of stock',
+  UPDATE_CART_SUCCESSFULLY: 'Update cart successfully',
+  CART_LISt_NOT_MATCH: 'Cart list not match'
 } as const
 
 export const ORDER_MESSAGES = {

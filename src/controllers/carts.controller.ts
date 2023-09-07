@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { CART_MESSAGES } from '~/constants/messages'
-import { ItemCartBody } from '~/models/interfaces/carts.interface'
+import { ItemCartBody, UpdateCartBody } from '~/models/interfaces/carts.interface'
 import cartService from '~/services/carts.service'
 import { wrapHandler } from '~/utils/wrapHandler'
 
@@ -34,5 +34,15 @@ export const getCartListController = wrapHandler(async (req: Request, res: Respo
   return res.json({
     message: CART_MESSAGES.GET_CART_LIST_SUCCESSFULLY,
     result
+  })
+})
+
+export const updateCartController = wrapHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user_id = req.decodedAccessToken?.user_id as string
+  const { products_added } = req.body as UpdateCartBody
+  await cartService.updateCart({ user_id, payload: products_added })
+
+  res.json({
+    message: CART_MESSAGES.UPDATE_CART_SUCCESSFULLY
   })
 })

@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { ItemCartBody } from '../interfaces/carts.interface'
+import { ItemCartBody, UpdateCartBody } from '../interfaces/carts.interface'
 import { CART_MESSAGES } from '~/constants/messages'
 
 export const addToCartSchema = Joi.object<ItemCartBody>({
@@ -11,4 +11,8 @@ export const addToCartSchema = Joi.object<ItemCartBody>({
     'number.min': CART_MESSAGES.QUANTITY_MIN
   }),
   color: Joi.string()
+})
+
+export const updateCartSchema = Joi.object<UpdateCartBody>({
+  products_added: Joi.array<ItemCartBody[]>().items(addToCartSchema)
 })

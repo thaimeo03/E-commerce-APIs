@@ -19,3 +19,7 @@ export interface ItemCartBody {
   quantity: number
   color?: string
 }
+
+export interface UpdateCartBody {
+  products_added: ItemCartBody[]
+}

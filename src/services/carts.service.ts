@@ -121,6 +121,27 @@ class CartService {
 
     return result
   }
+
+  async updateCart({ user_id, payload }: { user_id: string; payload: ItemCartBody[] }) {
+    const data = payload.map((item) => ({
+      ...item,
+      product_id: new ObjectId(item.product_id)
+    }))
+
+    await databaseService.carts.findOneAndUpdate(
+      {
+        user_id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          products_added: data
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+  }
 }
 
 const cartService = new CartService()

@@ -2,9 +2,10 @@ import { Router } from 'express'
 import {
   addToCardController,
   getCartListController,
-  removeProductFromCartController
+  removeProductFromCartController,
+  updateCartController
 } from '~/controllers/carts.controller'
-import { addToCardValidator } from '~/middlewares/carts.middleware'
+import { addToCardValidator, updateCartValidator } from '~/middlewares/carts.middleware'
 import { idProductValidator } from '~/middlewares/products.middleware'
 import { accessTokenValidator, isUserValidator } from '~/middlewares/users.middleware'
 
@@ -29,5 +30,10 @@ cartsRouter.delete(
 // Get cart list
 // Header: access_token
 cartsRouter.get('/', accessTokenValidator, isUserValidator, getCartListController)
+
+// Update cart list (quantity, color)
+// Header: access_token
+// Body: ProductInfo[]
+cartsRouter.put('/', accessTokenValidator, isUserValidator, updateCartValidator, updateCartController)
 
 export default cartsRouter
